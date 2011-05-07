@@ -1,0 +1,8 @@
+*~
+*.tmp
+*.py[co]
+./templates/full-width.html
+./templates/images
+./templates/style-demo.html
+./templates/styles
+
