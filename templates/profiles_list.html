@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile/{{user.username}}">Me</a></li>
+        <li><a class="active" href="/profiles">People</a></li>
+        <li class="last"><a href="#">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first">Actions:</li>
+      <li><a href="#">Manage friends</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <ul>
+        {% for user in users %}
+          <li>
+            <div class="item">
+              {% if user.pic %}
+                <img class="imgl" src="{{user.pic.url}}" alt="Your picture" width="75" height="75" />
+              {% else %}
+                <img class="imgl" src="/files/images/demo/imgl.gif" alt="Your picture" width="75" height="75" />
+              {% endif %}
+              {% if user.first_name %}
+                <p>{{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}</p>
+              {% else %}
+                <p>{{user.username}}</p>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="paginate">
+        {% if not search.last_result %}
+          <a class="more" href="/profiles?username={{search.username}}&first_name={{search.first_name}}&last_name={{search.last_name}}&email={{search.email}}&index={{search.index}}">More results</a>
+        {% endif %}
+      </div>
+    </div>
+{% endblock content %}
+
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Filter results</h2>
+        <form action="/profiles" method="get">
+          <ul>
+            <li>
+              <label for="username">Username:</label>
+              <input type="text" name="username" value="{{search.username}}" title="Type a username"/>
+            </li>
+            <li>
+              <label for="first_name">First name:</label>
+              <input type="text" name="first_name" value="{{search.first_name}}" title="Type a first name"/>
+            </li>
+            <li>
+              <label for="last_name">Last name:</label>
+              <input type="text" name="last_name" value="{{search.last_name}}" title="Type a last name"/>
+            </li>
+            <li>
+              <label for="email">E-Mail:</label>
+              <input type="text" name="email" value="{{search.email}}" title="Type an E-Mail"/>
+            </li>
+            <li>
+              <input type="submit" name="submit" value="Submit"/>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+{% endblock %}
+

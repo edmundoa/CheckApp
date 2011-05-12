@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
-from checkapp.profiles.resources.uprofile import UProfile
+from checkapp.profiles.resources.user_profile import UserProfile, \
+        UserProfileForm
+from checkapp.profiles.resources.user_profiles_list import UserProfilesList
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -17,9 +19,20 @@ urlpatterns = patterns('',
     (r'^admin/',    include(admin.site.urls)),
     
     # User profiles
-    (r'^profile/(?P<username>[\w-]+)$',     UProfile(),),
-    
-    # Static files
-    (r'^files/(?P<path>.*)$',   'django.views.static.serve', \
-            {'document_root':   settings.STATIC_DIR}),
+    (r'^profiles$',                             UserProfilesList(),),
+    (r'^profiles/create$',                      UserProfilesList(),),
+    (r'^profiles/new$',                         UserProfileForm(),),
+    (r'^profile/(?P<username>[\w-]+)$',         UserProfile(),),
+    (r'^profile/(?P<username>[\w-]+)/edit$',    UserProfile(),),
+    (r'^profile/(?P<username>[\w-]+)/form$',    UserProfileForm(),),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^files/(?P<path>.*)$',   'django.views.static.serve', \
+                {'document_root':   settings.STATIC_DIR}),
+        
+        (r'^media/(?P<path>.*)$',   'django.views.static.serve', \
+                {'document_root':   './media/'}),
+    )
+

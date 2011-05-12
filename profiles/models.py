@@ -24,13 +24,15 @@ from django.contrib.auth.models import User, UserManager
 # Create your models here.
 class Profile(User):
     '''Represents a user of the application'''
-    friends = models.ManyToManyField("self", symmetrical=False, \
+    pic = models.ImageField(upload_to="user_pics/%Y%m%d", blank = True, \
+            null=True, verbose_name="Path to user picture")
+    friends = models.ManyToManyField("self", blank=True, symmetrical=False, \
             verbose_name="Friends of a user")
-    pins = models.ManyToManyField("Pin", through="Merit", \
+    pins = models.ManyToManyField("Pin", blank=True, through="Merit", \
             verbose_name="Pins a user has won")
     
     def __unicode__(self):
-        return unicode(User)
+        return ("%s") % (self.username)
 
 
 class Notification(models.Model):
@@ -53,7 +55,6 @@ class Application(models.Model):
     name = models.CharField(max_length=50, unique=True, \
             verbose_name="Application name")
     logo = models.ImageField(upload_to="app_logos/%Y%m%d", null=True, \
-            height_field=500, width_field=500, \
             verbose_name="Path to application logo")
     description = models.CharField(max_length=500, \
             verbose_name="Application description")
@@ -87,7 +88,6 @@ class Screenshot(models.Model):
     app = models.ForeignKey("Application", \
             verbose_name="Application which has been captured")
     image = models.ImageField(upload_to="app_screenshots/%Y%m%d", \
-            height_field=2000, width_field=2000, \
             verbose_name="Path to application screenshot")
     
     def __unicode__(self):

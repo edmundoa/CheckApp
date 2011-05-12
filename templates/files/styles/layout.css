@@ -35,7 +35,7 @@ a{outline:none; text-decoration:none;}
 .fl_right{float:right;}
 
 .imgl, .imgr{border:1px solid #CCCCCC; padding:5px; color:#666666; background-color:#F7F7F7;}
-.imgl{float:left; margin:0 8px 8px 0; clear:left;}
+.imgl{float:left; margin:0 25px 8px 0; clear:left;}
 .imgr{float:right; margin:0 0 8px 8px; clear:right;}
 
 /* ----------------------------------------------Wrapper-------------------------------------*/

@@ -38,5 +38,7 @@ class WebResource:
         
         self.request = request
         
+        self.username = username
+        
         return callback()
 

@@ -5,4 +5,8 @@
 ./templates/images
 ./templates/style-demo.html
 ./templates/styles
+./media/app_logos/*
+./media/app_screenshots/*
+./media/pins/*
+./media/user_pics/*
 
