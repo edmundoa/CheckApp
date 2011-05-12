@@ -1,3 +1,30 @@
+2011-05-12  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * templates/files/styles/index.html:
+        Page not used, so it has been removed.
+
+    * media/user_pics/:
+    * profiles/admin.py:
+    * profiles/resources/user_profiles_list.py:
+    * templates/base.html:
+    * templates/profile_form.html:
+    * templates/profiles_list.html:
+    * profiles/resources/uprofile.py => profiles/resources/user_profile.py:
+    * .bzrignore:
+    * profiles/models.py:
+    * profiles/resources/web_resource.py:
+    * settings.py:
+    * templates/files/styles/layout.css:
+    * templates/profile.html:
+    * urls.py:
+    * profiles/resources/user_profile.py:
+        The following features has been added:
+            - View and modify user profiles
+            - Create new profiles
+            - View a list of users and filter it by username, name or E-Mail
+        There has been changes in settings and improvements here and there.
+
+
 2011-05-07  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
     
     * Initial revision.
