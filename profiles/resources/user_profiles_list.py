@@ -19,48 +19,61 @@
 
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
+from django.template import RequestContext
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
 from checkapp.profiles.models import Profile
+from checkapp.profiles.helpers.data_checker import DataChecker, DataError
+from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class UserProfilesList(WebResource):
     
     USERS_PER_PAGE = 10
     
     def process_GET(self):
-        uname = self.request.GET.get('username', "")
-        fname = self.request.GET.get('first_name', "")
-        lname = self.request.GET.get('last_name', "")
-        email = self.request.GET.get('email', "")
-        index = int(self.request.GET.get('index', 0))
-        findex = index + UserProfilesList.USERS_PER_PAGE
+        guest = self.request.user
         
-        users = Profile.objects.all()
-        search = {}
-        
-        if uname != "":
-            users = users.filter(username__icontains=uname)
-            search['username'] = uname
-        
-        if fname != "":
-            users = users.filter(first_name__icontains=fname)
-            search['first_name'] = fname
-        
-        if lname != "":
-            users = users.filter(last_name__icontains=lname)
-            search['last_name'] = lname
-        
-        if email != "":
-            users = users.filter(email=email)
-            search['email'] = email
-        
-        search['index'] = findex
-        
-        if len(users) < findex:
-            search['last_result'] = True
-        
-        users[index:findex]
-        
-        return render_to_response('profiles_list.html', {'users': users, 'search': search})
+        if guest.is_authenticated():
+            uname = self.request.GET.get('username', "")
+            fname = self.request.GET.get('first_name', "")
+            lname = self.request.GET.get('last_name', "")
+            email = self.request.GET.get('email', "")
+            index = int(self.request.GET.get('index', 0))
+            findex = index + UserProfilesList.USERS_PER_PAGE
+            
+            users = Profile.objects.exclude(username=guest.username)
+            search = {}
+            
+            if uname != "":
+                users = users.filter(username__icontains = uname)
+                search['username'] = uname
+            
+            if fname != "":
+                users = users.filter(first_name__icontains = fname)
+                search['first_name'] = fname
+            
+            if lname != "":
+                users = users.filter(last_name__icontains = lname)
+                search['last_name'] = lname
+            
+            if email != "":
+                users = users.filter(email = email)
+                search['email'] = email
+            
+            search['index'] = findex
+            
+            if len(users) < findex:
+                search['last_result'] = True
+            
+            users[index:findex]
+            
+            return render_to_response('profiles_list.html', \
+                    {'guest': guest, 'users': users, 'search': search,}, \
+                    context_instance=RequestContext(self.request))
+        else:
+            messages.error(self.request, UserMsgs.LOGIN)
+            return HttpResponseRedirect('/login/')
     
     def process_POST(self):
         uname = self.request.POST.get('username', None)
@@ -68,34 +81,31 @@ class UserProfilesList(WebResource):
         lname = self.request.POST.get('last_name', None)
         email = self.request.POST.get('email', None)
         picture = self.request.FILES.get('pic', None)
-        
         password = self.request.POST.get('password', None)
         cpassword = self.request.POST.get('cpassword', None)
         
-        if (uname is None) or (uname == ""):
-            raise Exception
-        
-        users = Profile.objects.filter(username=uname)
-        if (users):
-            raise Exception
-        
-        if (email is None) or (email == ""):
-            raise Exception
-        
-        if (password is None) or (password == ""):
-            raise Exception
-        
-        if (password != cpassword):
-            raise Exception
-        
-        user = Profile()
-        user.username = uname
-        user.first_name = fname
-        user.last_name = lname
-        user.email = email
-        user.pic = picture
-        user.password = password
-        user.save ()
-        
-        return HttpResponseRedirect('/profile/%s' % uname)
+        try:
+            DataChecker.check_username(uname)
+            DataChecker.user_exists(uname)
+            DataChecker.check_first_name(fname)
+            DataChecker.check_email(email)
+            DataChecker.check_password(password, cpassword)
+            
+            user = Profile()
+            user.username = uname
+            user.first_name = fname
+            user.last_name = lname
+            user.email = email
+            user.pic = picture
+            user.set_password(password)
+            user.save ()
+            
+            # User is logged in without typing again its data
+            user = authenticate(username=uname, password=password)
+            login(self.request, user)
+            return HttpResponseRedirect('/profile/%s/' % user.username)
+        except DataError as error:
+            messages.info(self.request, UserMsgs.FORM_ERROR)
+            messages.error(self.request, error.msg)
+            return HttpResponseRedirect('/profiles/new')
 

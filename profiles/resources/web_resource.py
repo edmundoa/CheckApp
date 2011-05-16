@@ -20,13 +20,13 @@
 from django.http import HttpResponseNotAllowed
 
 class WebResource:
-    def __call__(self, request, _method='', username=''):
+    def __call__(self, request, _method='', username='', friend=''):
         method = request.method
         
         try:
             method_param = request.REQUEST['_method']
             method_param = method_param.upper()
-            if method_param in ['PUT', 'DELETE']:
+            if method_param in ['GET', 'POST', 'PUT', 'DELETE']:
                 method = method_param
         except KeyError:
             pass
@@ -39,6 +39,7 @@ class WebResource:
         self.request = request
         
         self.username = username
+        self.friend = friend
         
         return callback()
 

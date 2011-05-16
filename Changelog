@@ -1,3 +1,36 @@
+2011-05-16  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * templates/profile_form.html:
+        Profile creation and edition are now different pages.
+
+    * profiles/helpers/:
+    * profiles/helpers/__init__.py:
+    * profiles/helpers/data_checker.py:
+    * profiles/helpers/user_msgs.py:
+    * profiles/resources/friends_list.py:
+    * profiles/resources/login.py:
+    * profiles/resources/logout.py:
+    * templates/friends_list.html:
+    * templates/login.html:
+    * templates/profile_creation_form.html:
+    * templates/profile_edit_form.html:
+    * profiles/resources/user_profile.py:
+    * profiles/resources/user_profiles_list.py:
+    * profiles/resources/web_resource.py:
+    * settings.py:
+    * templates/base.html:
+    * templates/profile.html:
+    * templates/profiles_list.html:
+    * urls.py:
+        Main changes performed:
+            - Data checking and user messages are in helper classes, 
+              avoiding duplication.
+            - Users can login and logout.
+            - Error messages are shown using Django messages.
+            - Users can add and remove friends.
+        As always, there are lots of changes and fixes.
+
+
 2011-05-12  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * templates/files/styles/index.html:

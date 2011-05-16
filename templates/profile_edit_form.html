@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile/{{guest.username}}">Me</a></li>
+        <li><a href="/profiles">People</a></li>
+        <li class="last"><a href="#">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first">Actions:</li>
+      <li><a href="/profile/{{guest.username}}">View</a></li>
+      <li>|</li>
+      <li class="current"><a href="/profile/{{guest.username}}/form">Edit</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/friends">Manage friends</a></li>
+      <li>|</li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+      <ul id="messages">
+        {% for message in messages %}
+          <li class="{{message.tag}}">{{message}}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    
+    <form enctype="multipart/form-data" action="/profile/{{guest.username}}/edit/" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="_method" value="put"/>
+      <ul>
+        <li>
+          <label for="pic">Picture:</label>
+          <input type="file" name="pic" title="Upload your picture"/>
+        </li>
+        <li>
+          <label for="first_name">First name:</label>
+          <input type="text" name="first_name" maxlength="30"
+              value="{{guest.first_name}}"
+              title="Insert your first name"/>
+        </li>
+        <li>
+          <label for="last_name">Last name:</label>
+          <input type="text" name="last_name" maxlength="30"
+              value="{{guest.last_name}}"
+              title="Insert your last name"/>
+        </li>
+        <li>
+          <label for="email">E-Mail:</label>
+          <input type="text" name="email" maxlength="30"
+              value="{{guest.email}}"
+              title="Insert your E-Mail"/>
+        </li>
+        <li>
+          <label for="password">Password:</label>
+          <input type="password" name="password" maxlength="30"
+              title="Insert your password"/>
+        </li>
+        <li>
+          <label for="cpassword">Password confirmation:</label>
+          <input type="password" name="cpassword" maxlength="30"
+              title="Insert your password again"/>
+        </li>
+        <li>
+          <input type="submit" name="submit" value="Submit"/>
+        </li>
+      </ul>
+    </form>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profiles/">People</a></li>
+        <li class="last"><a href="#">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first">Actions:</li>
+      <li><a href="/profile/{{guest.username}}/">View</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/form/">Edit</a></li>
+      <li>|</li>
+      <li class="current"><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
+      <li>|</li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <ul>
+        {% for friend in guest.friends.all %}
+          <li>
+            <div class="item">
+              <a href="/profile/{{friend.username}}/">
+              {% if friend.pic %}
+                <img class="imgl" src="{{friend.pic.url}}" alt="{{friend.username}}'s picture" width="75" height="75" />
+              {% else %}
+                <img class="imgl" src="/files/images/demo/imgl.gif" alt="{{friend.username}}'s picture" width="75" height="75" />
+              {% endif %}
+              </a>
+              {% if friend.first_name %}
+                <p><a href="/profile/{{friend.username}}/">
+                  {{friend.first_name|capfirst}}{% if friend.last_name %} {{friend.last_name|capfirst}}{% endif %}
+                </a></p>
+              {% else %}
+                <p><a href="/profile/{{friend.username}}/">
+                  {{friend.username}}
+                </a></p>
+              {% endif %}
+              </a>
+              <a href="/profile/{{guest.username}}/friends/{{friend.username}}/del/?_method=delete">Unfriend</a>
+            </div>
+          </li>
+        {% empty %}
+          <li>You haven't got any friend, but don't feel lonely, you will find somebody interesting.</li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock content %}
+
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Add a new friend</h2>
+        <p>Do you want to add friends?</p>
+        <p>It's easy, just type some information and you will find them.</p>
+        <form action="/profiles/" method="get">
+          <ul>
+            <li>
+              <label for="username">Username:</label>
+              <input type="text" name="username" title="Type a username"/>
+            </li>
+            <li>
+              <label for="first_name">First name:</label>
+              <input type="text" name="first_name" title="Type a first name"/>
+            </li>
+            <li>
+              <label for="last_name">Last name:</label>
+              <input type="text" name="last_name" title="Type a last name"/>
+            </li>
+            <li>
+              <label for="email">E-Mail:</label>
+              <input type="text" name="email" title="Type an E-Mail"/>
+            </li>
+            <li>
+              <input type="submit" name="submit" value="Submit"/>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+{% endblock %}
+

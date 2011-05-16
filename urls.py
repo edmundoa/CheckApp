@@ -1,8 +1,11 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+from checkapp.profiles.resources.login import Login
+from checkapp.profiles.resources.logout import Logout
 from checkapp.profiles.resources.user_profile import UserProfile, \
         UserProfileForm
 from checkapp.profiles.resources.user_profiles_list import UserProfilesList
+from checkapp.profiles.resources.friends_list import FriendsList
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -18,13 +21,24 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/',    include(admin.site.urls)),
     
+    (r'^$', 'django.views.generic.simple.redirect_to',  {'url': '/login'}),
+    
+    # Session management
+    (r'^login/$',    Login(),),
+    (r'^logout/$',   Logout(),),
+    
     # User profiles
-    (r'^profiles$',                             UserProfilesList(),),
-    (r'^profiles/create$',                      UserProfilesList(),),
-    (r'^profiles/new$',                         UserProfileForm(),),
-    (r'^profile/(?P<username>[\w-]+)$',         UserProfile(),),
-    (r'^profile/(?P<username>[\w-]+)/edit$',    UserProfile(),),
-    (r'^profile/(?P<username>[\w-]+)/form$',    UserProfileForm(),),
+    (r'^profiles/$', UserProfilesList(),),
+    (r'^profiles/create/$',  UserProfilesList(),),
+    (r'^profiles/new/$', UserProfileForm(),),
+    (r'^profile/(?P<username>[\w-]+)/$', UserProfile(),),
+    (r'^profile/(?P<username>[\w-]+)/edit/$',    UserProfile(),),
+    (r'^profile/(?P<username>[\w-]+)/form/$',    UserProfileForm(),),
+    (r'^profile/(?P<username>[\w-]+)/friends/$', FriendsList(),),
+    (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/add/$',  \
+            FriendsList(),),
+    (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/del/$',  \
+            FriendsList(),),
 )
 
 if settings.DEBUG:

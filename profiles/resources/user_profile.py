@@ -20,56 +20,83 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
 from checkapp.profiles.models import Profile
+from checkapp.profiles.helpers.data_checker import DataChecker, DataError
+from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class UserProfile(WebResource):
     
     def process_GET(self):
-        user = Profile.objects.get(username = self.username)
-        return render_to_response('profile.html', {'user': user,})
+        guest = self.request.user
+        
+        if guest.is_authenticated():
+            host = Profile.objects.get(username = self.username)
+            return render_to_response('profile.html', \
+                    {'guest': guest, 'host': host,}, \
+                    context_instance=RequestContext(self.request))
+        else:
+            messages.error(self.request, UserMsgs.LOGIN)
+            return HttpResponseRedirect('/login/')
     
     def process_PUT(self):
-        fname = self.request.POST.get('first_name', None)
-        lname = self.request.POST.get('last_name', None)
-        email = self.request.POST.get('email', None)
-        picture = self.request.FILES.get('pic', None)
+        guest = self.request.user
         
-        password = self.request.POST.get('password', None)
-        cpassword = self.request.POST.get('cpassword', None)
-        
-        user = Profile.objects.get(username = self.username)
-        user.first_name = fname
-        user.last_name = lname
-        
-        if (email is not None) and (email != ""):
-            print "email: %s" % email
-            user.email = email
-        
-        if picture is not None:
-            print "picture is not None"
-            user.pic = picture
-        
-        if (password is not None) and (password != ""):
-            print "password: %s" % password
-            if password == cpassword:
-                print "changing password"
-                user.password = password
-        
-        user.save()
-        
-        return HttpResponseRedirect('/profile/%s' % self.username)
+        if guest.is_authenticated():
+            if guest.username == self.username:
+                fname = self.request.POST.get('first_name', None)
+                lname = self.request.POST.get('last_name', None)
+                email = self.request.POST.get('email', None)
+                picture = self.request.FILES.get('pic', None)
+                password = self.request.POST.get('password', None)
+                cpassword = self.request.POST.get('cpassword', None)
+                
+                try:
+                    DataChecker.check_first_name(fname)
+                    DataChecker.check_email(email)
+                    
+                    guest.first_name = fname
+                    guest.last_name = lname
+                    guest.email = email
+                    
+                    if picture is not None:
+                        print "picture is not None"
+                        guest.pic = picture
+                    
+                    if not DataChecker.password_is_empty(password):
+                        print "password: %s" % password
+                        DataChecker.check_password(password, cpassword)
+                        guest.set_password(password)
+                    
+                    guest.save()
+                    
+                    return HttpResponseRedirect('/profile/%s/' % self.username)
+                except DataError as error:
+                    messages.info(self.request, UserMsgs.FORM_ERROR)
+                    messages.error(self.request, error.msg)
+                    return HttpResponseRedirect('/profile/%s/form/' % \
+                            self.username)
+            else:
+                return HttpResponseRedirect('/profile/%s/' % self.username)
+        else:
+            messages.error(self.request, UserMsgs.LOGIN)
+            return HttpResponseRedirect('/login/')
 
 
 class UserProfileForm(WebResource):
     
     def process_GET(self):
-        try:
-            user = Profile.objects.get(username = self.username)
-            
-            return render_to_response('profile_form.html', {'user': user,}, \
-                    context_instance=RequestContext(self.request))
-        except:
-            return render_to_response('profile_form.html', {'user': None,}, \
+        guest = self.request.user
+        
+        if guest.is_authenticated():
+            if guest.username == self.username:
+                return render_to_response('profile_edit_form.html', \
+                        {'guest': guest,}, \
+                        context_instance=RequestContext(self.request))
+            else:
+                return HttpResponseRedirect('/profile/%s/' % self.username)
+        else:
+            return render_to_response('profile_creation_form.html', \
                     context_instance=RequestContext(self.request))
 

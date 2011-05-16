@@ -4,8 +4,8 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a class="active" href="/profile/{{user.username}}">Me</a></li>
-        <li><a href="/profiles">People</a></li>
+        <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profiles/">People</a></li>
         <li class="last"><a href="#">Apps</a></li>
       </ul>
     </div>
@@ -14,27 +14,37 @@
 {% block breadcrumb %}
     <ul>
       <li class="first">Actions:</li>
-      <li class="current"><a href="/profile/{{user.username}}">View</a></li>
+      <li class="current"><a href="/profile/{{guest.username}}/">View</a></li>
       <li>|</li>
-      <li><a href="/profile/{{user.username}}/form">Edit</a></li>
+      <li><a href="/profile/{{guest.username}}/form/">Edit</a></li>
       <li>|</li>
-      <li><a href="#">Manage friends</a></li>
+      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
+      <li>|</li>
+      <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}
 
 {% block content %}
     <div id="content">
-      {% if user.pic %}
-        <img class="imgr" src="{{user.pic.url}}" alt="Your picture" width="150" height="150" />
+      <ul>
+        {% for message in messages %}
+          <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+      {% if host.pic %}
+        {% ifequal guest host %}
+          <img class="imgr" src="{{host.pic.url}}" alt="Your picture" width="150" height="150" />
+        {% else %}
+          <img class="imgr" src="{{host.pic.url}}" alt="{{host.first_name}}'s picture" width="150" height="150" />
+        {% endifequal %}
       {% else %}
-        <img class="imgr" src="/files/images/demo/imgl.gif" alt="Your picture" width="150" height="150" />
+        {% ifequal guest host %}
+          <img class="imgr" src="/files/images/demo/imgl.gif" alt="Your picture" width="150" height="150" />
+        {% else %}
+          <img class="imgr" src="/files/images/demo/imgl.gif" alt="{{host.first_name}}'s picture" width="150" height="150" />
+        {% endifequal %}
       {% endif %}
-      {% if user.first_name %}
-        <h1>Hello {{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}!</h1>
-      {% else %}
-        <h1>Hello {{user.username}}!</h1>
-      {% endif %}
-      <p>It's nice to see you again. Are you ready to check some apps?</p>
+      <h1>{{host.first_name|capfirst}}{% if host.last_name %} {{host.last_name|capfirst}}{% endif %}</h1>
       <ul>
         <li>Total check-apps: </li>
         <li>Number of comments: </li>
@@ -64,30 +74,63 @@
 {% block column %}
     <div id="column">
       <div class="holder">
-        <h2>My Merits</h2>
+        {% ifequal guest host %}
+          <h2>Your Merits</h2>
+        {% else %}
+          <h2>{{host.first_name}}'s Merits</h2>
+        {% endifequal %}
+        
         <ul>
-          {% for i in user.pins.all %}
+          {% for i in host.pins.all %}
             <li>
               <p class="imgholder"><img src="/files/images/demo/240x90.gif" alt="" /></p>
             </li>
           {% empty %}
             <li>
-              You have no merits. Why don't you check some apps?
+              {% ifequal guest host %}
+                You have no merits. Why don't you check some apps?
+              {% else %}
+                {{host.first_name}} has no merits.
+              {% endifequal %}
             </li>
           {% endfor %}
         </ul>
         <p class="readmore"><a href="#">More &raquo;</a></p>
       </div>
       <div class="holder">
-        <h2>My Friends</h2>
+        {% ifequal guest host %}
+          <h2>My Friends</h2>
+        {% else %}
+          <h2>{{host.first_name}}'s Friends</h2>
+        {% endifequal %}
         <ul>
-          {% for i in user.friends.all %}
-            <li><a href="/profile/{{i.username}}">{{i.first_name|capfirst}}</a></li>
+          {% for friend in host.friends.all %}
+            {% if friend.pic %}
+              <li>
+                <a href="/profile/{{friend.username}}/">
+                  <img class="imgl" src="{{friend.pic.url}}" alt="{{friend.first_name}}'s picture" width="50" height="50" />
+                  {{friend.first_name|capfirst}}
+                </a>
+              </li>
+            {% else %}
+              <li>
+                <a href="/profile/{{friend.username}}/">
+                  <img class="imgl" src="/files/images/demo/imgl.gif" alt="{{friend.first_name}}'s picture" width="50" height="50" />
+                  {{friend.first_name|capfirst}}
+                </a>
+              </li>
+            {% endif %}
           {% empty %}
-            <li>You don't have any friends :-(</li>
+            {% ifequal guest host %}
+              <li>You don't have any friends :-(</li>
+            {% else %}
+              <li>{{host.first_name}} doesn't have any friends :-(</li>
+            {% endifequal %}
           {% endfor %}
         </ul>
-        <p class="readmore"><a href="#">More &raquo;</a></p>
+        {% ifequal guest host %}
+          <p class="readmore"><a href="/profile/{{host.username}}/friends/">More &raquo;</a></p>
+        {% endifequal %}
       </div> 
     </div>
 {% endblock %}

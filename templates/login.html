@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+      <ul id="messages">
+        {% for message in messages %}
+          <li class="{{message.tag}}">{{message}}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <form action="/login/" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="_method" value="put"/>
+      <ul>
+        <li>
+          <label for="username">Username:</label>
+          <input type="text" name="username" maxlength="30"
+            title="Insert your username"/>
+        </li>
+        <li>
+          <label for="password">Password:</label>
+          <input type="password" name="password" maxlength="30"
+              title="Insert your password"/>
+        </li>
+        <li>
+          <input type="submit" name="submit" value="Submit"/>
+        </li>
+      </ul>
+    </form>
+{% endblock %}

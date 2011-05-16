@@ -81,6 +81,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
+
 ROOT_URLCONF = 'checkapp.urls'
 
 TEMPLATE_DIRS = (

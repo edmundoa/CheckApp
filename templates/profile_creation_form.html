@@ -4,43 +4,28 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/profile/{{user.username}}">Me</a></li>
-        <li><a href="/profiles">People</a></li>
-        <li class="last"><a href="#">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
 
-{% block breadcrumb %}
-    {% if user %}
-      <ul>
-        <li class="first">Actions:</li>
-        <li><a href="/profile/{{user.username}}">View</a></li>
-        <li>|</li>
-        <li class="current"><a href="/profile/{{user.username}}/form">Edit</a></li>
-        <li>|</li>
-        <li><a href="#">Manage friends</a></li>
+{% block content %}
+    {% if messages %}
+      <ul id="messages">
+        {% for message in messages %}
+          <li class="{{message.tag}}">{{message}}</li>
+        {% endfor %}
       </ul>
     {% endif %}
-{% endblock %}
-
-{% block content %}
-    {% if user %}
-      <form enctype="multipart/form-data" action="/profile/{{user.username}}/edit" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="_method" value="put"/>
-        <ul>
-    {% else %}
-      <form enctype="multipart/form-data" action="/profiles/create" method="post">
-        {% csrf_token %}
-        <ul>
-          <li>
-            <label for="username">Username:</label>
-            <input type="text" name="username" maxlength="30"
-                value="{{user.username}}"
-                title="Insert your username"/>
-          </li>
-    {% endif %}
+    
+    <form enctype="multipart/form-data" action="/profiles/create/" method="post">
+      {% csrf_token %}
+      <ul>
+        <li>
+          <label for="username">Username:</label>
+          <input type="text" name="username" maxlength="30"
+              value="{{guest.username}}"
+              title="Insert your username"/>
+        </li>
         <li>
           <label for="pic">Picture:</label>
           <input type="file" name="pic" title="Upload your picture"/>
@@ -48,19 +33,19 @@
         <li>
           <label for="first_name">First name:</label>
           <input type="text" name="first_name" maxlength="30"
-              value="{{user.first_name}}"
+              value="{{guest.first_name}}"
               title="Insert your first name"/>
         </li>
         <li>
           <label for="last_name">Last name:</label>
           <input type="text" name="last_name" maxlength="30"
-              value="{{user.last_name}}"
+              value="{{guest.last_name}}"
               title="Insert your last name"/>
         </li>
         <li>
           <label for="email">E-Mail:</label>
           <input type="text" name="email" maxlength="30"
-              value="{{user.email}}"
+              value="{{guest.email}}"
               title="Insert your E-Mail"/>
         </li>
         <li>

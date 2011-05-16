@@ -4,7 +4,7 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/profile/{{user.username}}">Me</a></li>
+        <li><a href="/profile/{{guest.username}}">Me</a></li>
         <li><a class="active" href="/profiles">People</a></li>
         <li class="last"><a href="#">Apps</a></li>
       </ul>
@@ -14,7 +14,7 @@
 {% block breadcrumb %}
     <ul>
       <li class="first">Actions:</li>
-      <li><a href="#">Manage friends</a></li>
+      <li><a href="/logout">Logout</a></li>
     </ul>
 {% endblock %}
 
@@ -25,14 +25,17 @@
           <li>
             <div class="item">
               {% if user.pic %}
-                <img class="imgl" src="{{user.pic.url}}" alt="Your picture" width="75" height="75" />
+                <img class="imgl" src="{{user.pic.url}}" alt="{{user.first_name}}'s picture" width="75" height="75" />
               {% else %}
-                <img class="imgl" src="/files/images/demo/imgl.gif" alt="Your picture" width="75" height="75" />
+                <img class="imgl" src="/files/images/demo/imgl.gif" alt="{{user.first_name}}'s picture" width="75" height="75" />
               {% endif %}
-              {% if user.first_name %}
-                <p>{{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}</p>
+              {% if user in guest.friends.all %}
+                <p><a href="/profile/{{user.username}}">{{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}</a></p>
               {% else %}
-                <p>{{user.username}}</p>
+                <p>
+                  {{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}
+                  <a href="/profile/{{guest.username}}/friends/{{user.username}}/add/?_method=post">Add as a friend</a>
+                </p>
               {% endif %}
             </div>
           </li>
@@ -50,7 +53,7 @@
     <div id="column">
       <div class="holder">
         <h2>Filter results</h2>
-        <form action="/profiles" method="get">
+        <form action="/profiles/" method="get">
           <ul>
             <li>
               <label for="username">Username:</label>
