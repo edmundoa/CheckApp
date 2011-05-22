@@ -30,6 +30,17 @@
   </div>
 </div>
 
+{% if messages %}
+  <div class="wrapper col3">
+    <div id="messages">
+      <ul>
+        {% for message in messages %}
+          <li>{{message}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
 
 <div class="wrapper col4">
   <div id="container">

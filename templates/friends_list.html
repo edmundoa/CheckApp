@@ -6,7 +6,7 @@
         <li><a href="/">Home</a></li>
         <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
         <li><a href="/profiles/">People</a></li>
-        <li class="last"><a href="#">Apps</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
@@ -32,9 +32,9 @@
             <div class="item">
               <a href="/profile/{{friend.username}}/">
               {% if friend.pic %}
-                <img class="imgl" src="{{friend.pic.url}}" alt="{{friend.username}}'s picture" width="75" height="75" />
+                <img class="imgl imgs" src="{{friend.pic.url}}" alt="{{friend.username}}'s picture" />
               {% else %}
-                <img class="imgl" src="/files/images/demo/imgl.gif" alt="{{friend.username}}'s picture" width="75" height="75" />
+                <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="{{friend.username}}'s picture" />
               {% endif %}
               </a>
               {% if friend.first_name %}

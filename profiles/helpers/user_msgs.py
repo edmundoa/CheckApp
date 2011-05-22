@@ -19,10 +19,23 @@
 
 class UserMsgs:
     
+    # Success messages
+    APP_ADDED = "Nice! Thanks to you we have a new application to discover."
+    APP_EDITED = "Application has been edited. Thanks for keep us updated."
+    USER_CREATED = "Thank you for joining! Your profile has been created."
+    USER_EDITED = "Don't you feel something has changed? Your profile " + \
+            "has been edited."
+    FRIEND_ADDED = "Whoa! You have a new friend ;-)"
+    FRIEND_REMOVED = "You have lost a friend :-("
+    
+    # Information messages
+    FORM_ERROR = "There are some errors on your data:"
+    LIMITED_VIEW = "You can't fully enjoy Checkapp if you don't login."
+    
+    # Error messages
     LOGIN = "Please login or create an account to access CheckApp." 
     LOGIN_ERROR = "Invalid username or password."
-    FORM_ERROR = "Please fix the following errors on your data:"
-    DISABLED_ACCOUNT = "Your account is disabled. Please contact us for " + \
-            "more information."
-    FRIEND_REMOVED = "Your friend has been removed successfully."
+    DISABLED_ACCOUNT = "Your account is disabled. What have you done? " + \
+            "Please contact us for more information."
+    FORBIDDEN = "You don't have permissions to access this page."
 

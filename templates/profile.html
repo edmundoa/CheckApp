@@ -6,7 +6,7 @@
         <li><a href="/">Home</a></li>
         <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
         <li><a href="/profiles/">People</a></li>
-        <li class="last"><a href="#">Apps</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
@@ -26,22 +26,17 @@
 
 {% block content %}
     <div id="content">
-      <ul>
-        {% for message in messages %}
-          <li>{{message}}</li>
-        {% endfor %}
-      </ul>
       {% if host.pic %}
         {% ifequal guest host %}
-          <img class="imgr" src="{{host.pic.url}}" alt="Your picture" width="150" height="150" />
+          <img class="imgr imgm" src="{{host.pic.url}}" alt="Your picture" />
         {% else %}
-          <img class="imgr" src="{{host.pic.url}}" alt="{{host.first_name}}'s picture" width="150" height="150" />
+          <img class="imgr imgm" src="{{host.pic.url}}" alt="{{host.first_name}}'s picture" />
         {% endifequal %}
       {% else %}
         {% ifequal guest host %}
-          <img class="imgr" src="/files/images/demo/imgl.gif" alt="Your picture" width="150" height="150" />
+          <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="Your picture" />
         {% else %}
-          <img class="imgr" src="/files/images/demo/imgl.gif" alt="{{host.first_name}}'s picture" width="150" height="150" />
+          <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="{{host.first_name}}'s picture" />
         {% endifequal %}
       {% endif %}
       <h1>{{host.first_name|capfirst}}{% if host.last_name %} {{host.last_name|capfirst}}{% endif %}</h1>

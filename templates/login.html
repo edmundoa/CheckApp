@@ -4,13 +4,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if messages %}
-      <ul id="messages">
-        {% for message in messages %}
-          <li class="{{message.tag}}">{{message}}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
     <form action="/login/" method="post">
       {% csrf_token %}
       <input type="hidden" name="_method" value="put"/>

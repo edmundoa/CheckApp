@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        {% if guest.is_authenticated %}
+          <li><a href="/profile/{{guest.username}}/">Me</a></li>
+          <li><a href="/profiles/">People</a></li>
+        {% endif %}
+        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first current"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
+      {% ifequal app.owner guest %}
+        <li>|</li>
+        <li><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
+      {% endifequal %}
+      <li>|</li>
+      {% if guest.is_authenticated %}
+        <li><a href="/logout/">Logout</a></li>
+      {% else %}
+        <li><a href="/login/">Login</a></li>
+      {% endif %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      {% if app.logo %}
+        <img class="imgr imgm" src="{{app.logo.url}}" alt="{{app.name}}'s logo" />
+      {% else %}
+        <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="{{app.name}}'s logo" />
+      {% endif %}
+      <h1>{{app.name|capfirst}} <div class="category">in {{app.category.name|capfirst}}</div></h1>
+      <ul>
+        <li><label>Developer:</label> {{app.developer|default:"Unknown"}}</li>
+        <li><label>Latest version:</label> {{app.version|default:"Unknown"}}</li>
+        <li><label>URL:</label> {% if app.url %}<a href="{{app.url}}">{{app.url}}</a>{% else %}Unknown{% endif %}</li>
+        <li><label>License:</label> {{app.license|default:"Unknown"}}</li>
+        <li><label>Description:</label> <p>{{app.description}}</p></li>
+      </ul>
+      <div class="clear"></div>
+      <div id="comments">
+        <h2>Latest comments</h2>
+        <ul class="commentlist">
+          <li class="comment_odd">
+            <div class="submitdate">January 1, 2011 at 00:00 am</div>
+            <p>Comment 1</p>
+          </li>
+          <li class="comment_even">
+            <div class="submitdate">January 1, 2011 at 00:00 am</div>
+            <p>Comment 2</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block column %}
+  <div id="column">
+    <div class="holder">
+      <h2>Stats</h2>
+      <ul>
+        {% if guest.is_authenticated %}
+          <li>Your check-apps: </li>
+        {% endif %}
+        <li>Total check-apps: </li>
+        {% if app.superuser %}
+          <li>Superuser: {{app.superuser.name}}</li>
+        {% endif %}
+      </ul>
+    </div>
+    {% if guest.is_authenticated %}
+      <div class="holder">
+        <h2>Check-app</h2>
+        <p>Are you using this app? Then check it app!</p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+

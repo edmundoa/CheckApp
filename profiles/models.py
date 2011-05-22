@@ -24,7 +24,7 @@ from django.contrib.auth.models import User, UserManager
 # Create your models here.
 class Profile(User):
     '''Represents a user of the application'''
-    pic = models.ImageField(upload_to="user_pics/%Y%m%d", blank = True, \
+    pic = models.ImageField(upload_to="user_pics/%Y%m%d", blank=True, \
             null=True, verbose_name="Path to user picture")
     friends = models.ManyToManyField("self", blank=True, symmetrical=False, \
             verbose_name="Friends of a user")
@@ -47,29 +47,37 @@ class Notification(models.Model):
             verbose_name="Indicates whether a notification has been read")
     
     def __unicode__(self):
-        return (("'%s' to %s on %s") % (text, user.name, time))
+        return (("'%s' to %s on %s") % (self.text, self.user.name, self.time))
 
 
 class Application(models.Model):
     '''Represents an application available for check up'''
-    name = models.CharField(max_length=50, unique=True, \
+    short_name = models.CharField(max_length=30, unique=True, \
+            verbose_name="Application short name")
+    name = models.CharField(max_length=100, unique=True, \
             verbose_name="Application name")
-    logo = models.ImageField(upload_to="app_logos/%Y%m%d", null=True, \
-            verbose_name="Path to application logo")
+    logo = models.ImageField(upload_to="app_logos/%Y%m%d", blank=True, \
+            null=True, verbose_name="Path to application logo")
     description = models.CharField(max_length=500, \
             verbose_name="Application description")
-    vendor = models.CharField(max_length=50, null=True, \
-            verbose_name="Application distributor")
-    developers = models.CharField(max_length=200, null=True, \
+    version = models.CharField(max_length=20, null=True, \
+            verbose_name="Latest application version")
+    developer = models.CharField(max_length=200, null=True, \
             verbose_name="Name of application developers")
+    license = models.CharField(max_length=50, null=True, \
+            verbose_name="Application license")
     url = models.URLField(verbose_name="Application URL")
-    owner = models.ForeignKey("Profile", null=True, \
+    owner = models.ForeignKey("Profile", blank=True, null=True, \
+            related_name="owner", \
             verbose_name="Application administrator")
+    superuser = models.ForeignKey("Profile", blank=True, null=True, \
+            related_name="superuser", \
+            verbose_name="Application superuser")
     category = models.ForeignKey("Category", \
             verbose_name="Application category")
     
     def __unicode__(self):
-        return (("Application %s on %s") % (name, category.name))
+        return (("Application %s on %s") % (self.name, self.category.name))
 
 
 class Category(models.Model):
@@ -78,7 +86,7 @@ class Category(models.Model):
             verbose_name="Category name")
     
     def __unicode__(self):
-        return (("Category %s") % (name))
+        return (("Category %s") % (self.name))
 
 
 class Screenshot(models.Model):
@@ -91,7 +99,7 @@ class Screenshot(models.Model):
             verbose_name="Path to application screenshot")
     
     def __unicode__(self):
-        return (("Screenshot of %s on '%s'") % (app.name, image))
+        return (("Screenshot of %s on '%s'") % (self.app.name, self.image))
 
 
 class CheckApp(models.Model):
@@ -106,8 +114,8 @@ class CheckApp(models.Model):
             verbose_name="Time of check up")
     
     def __unicode__(self):
-        return (("%s has checked app %s on %s") % (user.username, \
-                app.name, time))
+        return (("%s has checked app %s on %s") % (self.user.username, \
+                self.app.name, self.time))
 
 
 class Comment(models.Model):
@@ -119,7 +127,7 @@ class Comment(models.Model):
             verbose_name="Time when user commented")
     
     def __unicode__(self):
-        return (("%s has commented on %s") % (user.name, app.name))
+        return (("%s has commented on %s") % (self.user.name, self.app.name))
 
 
 class Reply(models.Model):
@@ -131,7 +139,7 @@ class Reply(models.Model):
             verbose_name="Time when user commented")
     
     def __unicode__(self):
-        return (("%s has replied to %s") % (user.name, comment.id))
+        return (("%s has replied to %s") % (self.user.name, self.comment.id))
 
 
 class Merit(models.Model):
@@ -144,7 +152,8 @@ class Merit(models.Model):
             verbose_name="Time of merit achievement")
     
     def __unicode__(self):
-        return (("%s won %s on %s") % (user.name, pin.name, time))
+        return (("%s won %s on %s") % (self.user.name, self.pin.name, \
+                self.time))
 
 
 class Pin(models.Model):
@@ -155,6 +164,6 @@ class Pin(models.Model):
             verbose_name="Path to pin image")
     
     def __unicode__(self):
-        return (("Pin %s") % (name))
+        return (("Pin %s") % (self.name))
 
 

@@ -4,9 +4,9 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/profile/{{guest.username}}">Me</a></li>
-        <li><a href="/profiles">People</a></li>
-        <li class="last"><a href="#">Apps</a></li>
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profiles/">People</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
@@ -14,25 +14,17 @@
 {% block breadcrumb %}
     <ul>
       <li class="first">Actions:</li>
-      <li><a href="/profile/{{guest.username}}">View</a></li>
+      <li><a href="/profile/{{guest.username}}/">View</a></li>
       <li>|</li>
-      <li class="current"><a href="/profile/{{guest.username}}/form">Edit</a></li>
+      <li class="current"><a href="/profile/{{guest.username}}/form/">Edit</a></li>
       <li>|</li>
-      <li><a href="/profile/{{guest.username}}/friends">Manage friends</a></li>
+      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
-      <li><a href="/logout">Logout</a></li>
+      <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}
 
 {% block content %}
-    {% if messages %}
-      <ul id="messages">
-        {% for message in messages %}
-          <li class="{{message.tag}}">{{message}}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-    
     <form enctype="multipart/form-data" action="/profile/{{guest.username}}/edit/" method="post">
       {% csrf_token %}
       <input type="hidden" name="_method" value="put"/>

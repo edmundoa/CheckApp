@@ -39,8 +39,6 @@ class UserProfilesList(WebResource):
             fname = self.request.GET.get('first_name', "")
             lname = self.request.GET.get('last_name', "")
             email = self.request.GET.get('email', "")
-            index = int(self.request.GET.get('index', 0))
-            findex = index + UserProfilesList.USERS_PER_PAGE
             
             users = Profile.objects.exclude(username=guest.username)
             search = {}
@@ -60,13 +58,6 @@ class UserProfilesList(WebResource):
             if email != "":
                 users = users.filter(email = email)
                 search['email'] = email
-            
-            search['index'] = findex
-            
-            if len(users) < findex:
-                search['last_result'] = True
-            
-            users[index:findex]
             
             return render_to_response('profiles_list.html', \
                     {'guest': guest, 'users': users, 'search': search,}, \
@@ -96,16 +87,21 @@ class UserProfilesList(WebResource):
             user.first_name = fname
             user.last_name = lname
             user.email = email
-            user.pic = picture
             user.set_password(password)
+            
+            if picture:
+                user.pic = picture
+            
             user.save ()
             
             # User is logged in without typing again its data
             user = authenticate(username=uname, password=password)
             login(self.request, user)
+            
+            messages.success(self.request, UserMsgs.USER_CREATED)
             return HttpResponseRedirect('/profile/%s/' % user.username)
         except DataError as error:
             messages.info(self.request, UserMsgs.FORM_ERROR)
             messages.error(self.request, error.msg)
-            return HttpResponseRedirect('/profiles/new')
+            return HttpResponseRedirect('/profiles/new/')
 

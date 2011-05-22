@@ -71,6 +71,7 @@ class UserProfile(WebResource):
                     
                     guest.save()
                     
+                    messages.success(self.request, UserMsgs.USER_EDITED)
                     return HttpResponseRedirect('/profile/%s/' % self.username)
                 except DataError as error:
                     messages.info(self.request, UserMsgs.FORM_ERROR)

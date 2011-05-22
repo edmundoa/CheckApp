@@ -1,3 +1,32 @@
+2011-05-22  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * profiles/resources/app.py:
+    * profiles/resources/apps_list.py:
+    * templates/application.html:
+    * templates/application_form.html:
+    * templates/apps_list.html:
+    * profiles/helpers/data_checker.py:
+    * profiles/helpers/user_msgs.py:
+    * profiles/models.py:
+    * profiles/resources/friends_list.py:
+    * profiles/resources/user_profile.py:
+    * profiles/resources/user_profiles_list.py:
+    * profiles/resources/web_resource.py:
+    * templates/base.html:
+    * templates/files/styles/layout.css:
+    * templates/friends_list.html:
+    * templates/login.html:
+    * templates/profile.html:
+    * templates/profile_creation_form.html:
+    * templates/profile_edit_form.html:
+    * templates/profiles_list.html:
+    * urls.py:
+        Changes performed:
+            - Added logic and views for applications.
+            - Users can add new applications and edit them.
+        Several improvements and fixes.
+
+
 2011-05-16  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * templates/profile_form.html:

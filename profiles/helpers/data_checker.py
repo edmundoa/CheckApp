@@ -17,7 +17,7 @@
 #
 # Authors: Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
-from checkapp.profiles.models import Profile
+from checkapp.profiles.models import Profile, Category
 
 
 class DataError(Exception):
@@ -35,6 +35,10 @@ class DataError(Exception):
 class DataChecker:
     
     @staticmethod
+    def defined(string):
+        return (string is not None) or (string != "")
+    
+    @staticmethod
     def user_exists(uname):
         user = Profile.objects.filter(username=uname)
         if len(user) > 0:
@@ -42,29 +46,47 @@ class DataChecker:
     
     @staticmethod
     def check_username(uname):
-        if (uname is None) or (uname == ""):
+        if not DataChecker.defined(uname):
             raise DataError("Username cannot be empty")
     
     @staticmethod
     def check_first_name(fname):
-        if (fname is None) or (fname == ""):
+        if not DataChecker.defined(fname):
             raise DataError("First name cannot be empty")
     
     @staticmethod
     def check_email(email):
-        if (email is None) or (email == ""):
+        if not DataChecker.defined(email):
             raise DataError("E-Mail cannot be empty")
     
     @staticmethod
-    def password_is_empty(password):
-        return (password is None) or (password == "")
-    
-    @staticmethod
     def check_password(password, confirmation):
-        if DataChecker.password_is_empty(password):
+        if not DataChecker.defined(password):
             raise DataError("Password cannot be empty")
         
         if (password != confirmation):
             raise DataError("Passwords don't match")
+    
+    @staticmethod
+    def check_short_name(sname):
+        if not DataChecker.defined(sname):
+            raise DataError("Short name cannot be empty")
+    
+    @staticmethod
+    def check_name(name):
+        if not DataChecker.defined(name):
+            raise DataError("Name cannot be empty")
+    
+    @staticmethod
+    def check_category(category):
+        try:
+            Category.objects.get(name=category)
+        except:
+            raise DataError("Category '%s' doesn't exist" % category)
+    
+    @staticmethod
+    def check_url(url):
+        if DataChecker.defined(url):
+            pass
 
 

@@ -18,7 +18,8 @@ body{
 	font-size:13px;
 	font-family:verdana, Arial, Helvetica, sans-serif;
 	color:#FFFFFF;
-	background-color:#4F473A;
+	background-color:#1C3451;
+/*	background-color:#4F473A;*/
 	}
 
 img{border:0; padding:0; margin:0;}
@@ -37,6 +38,8 @@ a{outline:none; text-decoration:none;}
 .imgl, .imgr{border:1px solid #CCCCCC; padding:5px; color:#666666; background-color:#F7F7F7;}
 .imgl{float:left; margin:0 25px 8px 0; clear:left;}
 .imgr{float:right; margin:0 0 8px 8px; clear:right;}
+.imgm{max-width: 150px; max-height: 150px;}
+.imgs{max-width: 75px; max-height: 75px;}
 
 /* ----------------------------------------------Wrapper-------------------------------------*/
 
@@ -55,7 +58,7 @@ div.wrapper{
 
 /* ----------------------------------------------Generalise-------------------------------------*/
 
-#head, #gallery, #breadcrumb, #container, #footer{
+#head, #gallery, #breadcrumb, #messages, #container, #footer{
 	position:relative;
 	margin:0 auto 0;
 	display:block;
@@ -115,6 +118,20 @@ div.wrapper{
 #breadcrumb ul li{display:inline;}
 #breadcrumb ul li.first{font-weight:bold;}
 #breadcrumb ul li.current a{text-decoration:underline;}
+
+/* ----------------------------------------------Messages Bar-------------------------------------*/
+
+#messages{padding:20px 0;}
+
+#messages a{
+	font-weight:bold;
+	}
+
+#messages ul{
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
 
 /* ----------------------------------------------Container-------------------------------------*/
 

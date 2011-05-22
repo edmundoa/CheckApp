@@ -9,14 +9,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if messages %}
-      <ul id="messages">
-        {% for message in messages %}
-          <li class="{{message.tag}}">{{message}}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-    
     <form enctype="multipart/form-data" action="/profiles/create/" method="post">
       {% csrf_token %}
       <ul>

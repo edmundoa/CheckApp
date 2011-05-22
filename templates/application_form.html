@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile/{{guest.username}}">Me</a></li>
+        <li><a href="/profiles/">People</a></li>
+        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      {% if app %}
+        <li class="first"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
+        <li>|</li>
+        <li class="current"><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
+      {% else %}
+        <li class="first">New application</li>
+      {% endif %}
+      <li>|</li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% if app %}
+      <form enctype="multipart/form-data" action="/app/{{app.short_name}}/edit/" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="_method" value="put"/>
+    {% else %}
+      <form enctype="multipart/form-data" action="/apps/create/" method="post">
+        {% csrf_token %}
+    {% endif %}
+      <ul>
+        <li>
+          <label for="logo">Logo:</label>
+          <input type="file" name="logo" title="{{app.name}}'s logo"/>
+        </li>
+        <li>
+          <label for="app_sname">Short Name:</label>
+          <input type="text" name="app_sname" maxlength="50"
+              value="{{app.short_name}}"
+              title="Type a short name for {{app.name}} to use on links"/>
+        </li>
+        <li>
+          <label for="app_name">Name:</label>
+          <input type="text" name="app_name" maxlength="50"
+              value="{{app.name}}"
+              title="Insert {{app.name}}'s name"/>
+        </li>
+        <li>
+          <label for="category">Category:</label>
+          <select name="category">
+            {% for cat in cats %}
+              {% ifequal cat app.category %}
+                <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+              {% else %}
+                <option value="{{cat.name}}">{{cat.name}}</option>
+              {% endifequal %}
+            {% endfor %}
+          </select>
+        </li>
+        <li>
+          <label for="devel">Developer:</label>
+          <input type="text" name="devel" maxlength="200"
+              value="{{app.developer}}"
+              title="Type {{app.name}}'s developer"/>
+        </li>
+        <li>
+          <label for="version">Latest version:</label>
+          <input type="text" name="version" maxlength="30"
+              value="{{app.version}}"
+              title="Type {{app.name}}'s latest version"/>
+        </li>
+        <li>
+          <label for="license">License:</label>
+          <input type="text" name="license" maxlength="30"
+              value="{{app.license}}"
+              title="Type {{app.name}}'s license"/>
+        </li>
+        <li>
+          <label for="url">Website:</label>
+          <input type="text" name="url" maxlength="100"
+              value="{{app.url}}"
+              title="Type {{app.name}}'s website"/>
+        </li>
+        <li>
+          <label for="desc">Description:</label>
+          <textarea name="desc" rows="5" cols="50" title="Type a brief description of {{app.name}}">{{app.description}}</textarea>
+        </li>
+
+        <li>
+          <input type="submit" name="submit" value="Submit"/>
+        </li>
+      </ul>
+    </form>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        {% if guest.is_authenticated %}
+          <li><a href="/profile/{{guest.username}}/">Me</a></li>
+          <li><a href="/profiles/">People</a></li>
+        {% endif %}
+        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first current"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+      <li>|</li>
+      {% if guest.is_authenticated %}
+        <li><a href="/apps/new/">Add an application</a></li>
+        <li>|</li>
+        <li><a href="/logout/">Logout</a></li>
+      {% else %}
+        <li><a href="/login/">Login</a></li>
+      {% endif %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <ul>
+        {% for app in apps %}
+          <li>
+            <div class="item">
+              <a href="/app/{{app.short_name}}/">
+              {% if app.logo %}
+                <img class="imgl imgs" src="{{app.logo.url}}" alt="{{app.name}}'s logo" />
+              {% else %}
+                <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="{{app.name}}'s picture" />
+              {% endif %}
+              </a>
+              <p><a href="/app/{{app.short_name}}/">{{app.name}}</a></p>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock content %}
+
+{% block column %}
+  {% if not user %}
+    <div id="column">
+      <div class="holder">
+        <h2>Filter results</h2>
+        <form action="/apps/" method="get">
+          <ul>
+            <li>
+              <label for="name">Application Name:</label>
+              <input type="text" name="name" value="{{search.name}}" title="Type an application name"/>
+            </li>
+            <li>
+              <label for="developer">Developer:</label>
+              <input type="text" name="developer" value="{{search.developer}}" title="Type a developer"/>
+            </li>
+            <li>
+              <label for="license">License:</label>
+              <input type="text" name="license" value="{{search.license}}" title="Type a license"/>
+            </li>
+            <li>
+              <label for="category">Category:</label>
+              <select name="category">
+                <option value="">Undefined</option>
+                {% for cat in cats %}
+                  {% ifequal cat.name search.category %}
+                    <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+                  {% else %}
+                    <option value="{{cat.name}}">{{cat.name}}</option>
+                  {% endifequal %}
+                {% endfor %}
+              </select>
+            </li>
+            <li>
+              <input type="submit" name="submit" value="Submit"/>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+

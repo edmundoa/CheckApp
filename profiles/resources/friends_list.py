@@ -48,6 +48,7 @@ class FriendsList(WebResource):
             guest.friends.add(friend)
             guest.save()
             
+            messages.success(self.request, UserMsgs.FRIEND_ADDED)
             return HttpResponseRedirect('/profile/%s/friends/' % guest.username)
         else:
             messages.error(self.request, UserMsgs.LOGIN)

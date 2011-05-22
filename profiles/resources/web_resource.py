@@ -20,7 +20,8 @@
 from django.http import HttpResponseNotAllowed
 
 class WebResource:
-    def __call__(self, request, _method='', username='', friend=''):
+    def __call__(self, request, _method='', appname='', username='', \
+            friend=''):
         method = request.method
         
         try:
@@ -38,6 +39,7 @@ class WebResource:
         
         self.request = request
         
+        self.appname = appname
         self.username = username
         self.friend = friend
         
