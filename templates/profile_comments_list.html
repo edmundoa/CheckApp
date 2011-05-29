@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        {% ifequal guest host %}
+          <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
+          <li><a href="/profiles/">People</a></li>
+        {% else %}
+          <li><a href="/profile/{{guest.username}}/">Me</a></li>
+          <li><a class="active" href="/profiles/">People</a></li>
+        {% endifequal %}
+        <li class="last"><a href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      {% ifequal guest host %}
+        <li class="first current"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
+      {% else %}
+        <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
+      {% endifequal %}
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
+      <li>|</li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <h1>Comments by {{host.first_name}} {{host.last_name}}</h1>
+      <div id="comments">
+        <ul class="commentlist">
+          {% for comment in comments %}
+            {% if forloop.counter|divisibleby:"2" %}
+              <li class="comment_even">
+            {% else %}
+              <li class="comment_odd">
+            {% endif %}
+            {% if comment.user.pic %}
+              <div class="author"><img class="avatar" src="{{comment.user.pic.url}}" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">on</span> <span class="name"><a href="/app/{{comment.app.short_name}}/">{{comment.app.name}}</a>:</span></div>
+            {% else %}
+              <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">on</span> <span class="name"><a href="/app/{{comment.app.short_name}}/">{{comment.app.name}}</a>:</span></div>
+            {% endif %}
+            <div class="submitdate">{{comment.time}}</div>
+            <p>{{comment.text}}</p>
+            </li>
+          {% empty %}
+            <li>{{host.first_name}} has written any comment :-(</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block column %}
+    <div id="column">
+    </div>
+{% endblock %}
+

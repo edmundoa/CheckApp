@@ -21,7 +21,7 @@ from django.http import HttpResponseNotAllowed
 
 class WebResource:
     def __call__(self, request, _method='', appname='', username='', \
-            friend=''):
+            commentno='', friend=''):
         method = request.method
         
         try:
@@ -41,6 +41,7 @@ class WebResource:
         
         self.appname = appname
         self.username = username
+        self.commentno = commentno
         self.friend = friend
         
         return callback()

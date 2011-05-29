@@ -22,6 +22,7 @@ class UserMsgs:
     # Success messages
     APP_ADDED = "Nice! Thanks to you we have a new application to discover."
     APP_EDITED = "Application has been edited. Thanks for keep us updated."
+    COMMENT_ADDED = "Thanks for your comment!"
     USER_CREATED = "Thank you for joining! Your profile has been created."
     USER_EDITED = "Don't you feel something has changed? Your profile " + \
             "has been edited."
@@ -30,7 +31,7 @@ class UserMsgs:
     
     # Information messages
     FORM_ERROR = "There are some errors on your data:"
-    LIMITED_VIEW = "You can't fully enjoy Checkapp if you don't login."
+    LIMITED_VIEW = "You can't fully enjoy CheckApp if you don't login."
     
     # Error messages
     LOGIN = "Please login or create an account to access CheckApp." 
@@ -38,4 +39,5 @@ class UserMsgs:
     DISABLED_ACCOUNT = "Your account is disabled. What have you done? " + \
             "Please contact us for more information."
     FORBIDDEN = "You don't have permissions to access this page."
+    UNEXPECTED_ERROR = "Oops! Something wrong has happened. Please try again."
 

@@ -17,7 +17,6 @@ admin.site.register(Category)
 admin.site.register(Screenshot)
 admin.site.register(CheckApp)
 admin.site.register(Comment)
-admin.site.register(Reply)
 admin.site.register(Merit)
 admin.site.register(Pin)
 

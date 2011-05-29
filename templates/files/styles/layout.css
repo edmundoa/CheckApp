@@ -40,6 +40,7 @@ a{outline:none; text-decoration:none;}
 .imgr{float:right; margin:0 0 8px 8px; clear:right;}
 .imgm{max-width: 150px; max-height: 150px;}
 .imgs{max-width: 75px; max-height: 75px;}
+.imgxs{max-width: 50px; max-height: 50px;}
 
 /* ----------------------------------------------Wrapper-------------------------------------*/
 
@@ -181,9 +182,11 @@ div.wrapper{
 #comments .commentlist .author .name{font-weight:bold;}
 #comments .commentlist .submitdate{font-size:smaller;}
 
-#comments .commentlist p {margin:10px 5px 10px 0; padding:0; font-weight: normal;text-transform: none;}
+#comments .commentlist p {margin:10px 5px 10px 75px; padding:0; font-weight: normal;text-transform: none;}
 
-#comments .commentlist li .avatar{float:right; border:1px solid #EEEEEE; margin:0 0 0 10px;}
+#comments .commentlist li .avatar{float:left; border:1px solid #EEEEEE; margin:0 10px 0 10px; width: 50px; height: 50px;}
+
+#comments .commentlist li .edit{float:right; margin:0 0 0 10px;}
 
 /* ----------------------------------------------Right Block-------------------------------------*/
 

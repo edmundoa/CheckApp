@@ -20,6 +20,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User, UserManager
+import threading
 
 # Create your models here.
 class Profile(User):
@@ -30,6 +31,9 @@ class Profile(User):
             verbose_name="Friends of a user")
     pins = models.ManyToManyField("Pin", blank=True, through="Merit", \
             verbose_name="Pins a user has won")
+    
+    def count_unread(self):
+        return self.notification_set.filter(read=False).count()
     
     def __unicode__(self):
         return ("%s") % (self.username)
@@ -46,8 +50,13 @@ class Notification(models.Model):
     read = models.BooleanField(default=False, \
             verbose_name="Indicates whether a notification has been read")
     
+    def mark_read(self):
+        self.read = True
+        self.save()
+    
     def __unicode__(self):
-        return (("'%s' to %s on %s") % (self.text, self.user.name, self.time))
+        return (("'%s' to %s on %s") % (self.text, self.user.username, \
+                self.time))
 
 
 class Application(models.Model):
@@ -120,26 +129,33 @@ class CheckApp(models.Model):
 
 class Comment(models.Model):
     '''Represents a comment on an application profile'''
+    order = models.IntegerField(verbose_name="Application's number of comment")
     user = models.ForeignKey("Profile", verbose_name="User who has commented")
     app = models.ForeignKey("Application", verbose_name="Application commented")
     text = models.CharField(max_length=500, verbose_name="Commented text")
     time = models.DateTimeField(auto_now_add=True, \
             verbose_name="Time when user commented")
     
-    def __unicode__(self):
-        return (("%s has commented on %s") % (self.user.name, self.app.name))
-
-
-class Reply(models.Model):
-    '''Represents a reply to a comment'''
-    user = models.ForeignKey("Profile", verbose_name="User who has commented")
-    comment = models.ForeignKey("Comment", verbose_name="Comment replied")
-    text = models.CharField(max_length=500, verbose_name="Commented text")
-    time = models.DateTimeField(auto_now_add=True, \
-            verbose_name="Time when user commented")
+    def save(self, *args, **kwargs):
+        lock = threading.Lock()
+        
+        lock.acquire()
+        
+        try:
+            if not self.id:
+                try:
+                    comment = self.app.comment_set.order_by('-order').all()[0]
+                    self.order = comment.order + 1
+                except IndexError:
+                    self.order = 1
+            
+            super(Comment, self).save(*args, **kwargs)
+        finally:
+            lock.release()
     
     def __unicode__(self):
-        return (("%s has replied to %s") % (self.user.name, self.comment.id))
+        return (("%s, %s on %s") % (self.order, self.user.username, \
+                self.app.name))
 
 
 class Merit(models.Model):
@@ -152,7 +168,7 @@ class Merit(models.Model):
             verbose_name="Time of merit achievement")
     
     def __unicode__(self):
-        return (("%s won %s on %s") % (self.user.name, self.pin.name, \
+        return (("%s won %s on %s") % (self.user.username, self.pin.name, \
                 self.time))
 
 

@@ -13,7 +13,14 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first">Actions:</li>
+      <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
+      <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}

@@ -17,8 +17,12 @@
         <li class="first"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
         <li>|</li>
         <li class="current"><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
+        <li>|</li>
+        <li><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
       {% else %}
-        <li class="first">New application</li>
+        <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        <li>|</li>
+        <li class="current"><a href="/apps/new/">New application</a></li>
       {% endif %}
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>

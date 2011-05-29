@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profiles/">People</a></li>
+        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ul>
+      <li class="first"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
+      {% ifequal app.owner guest %}
+        <li>|</li>
+        <li><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
+      {% endifequal %}
+      <li>|</li>
+      <li class="current"><a href="/app/{{app.short_name}}/comments/">Comments</a></li>
+      <li>|</li>
+      <li><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+      <li>|</li>
+      <li><a href="/logout/">Logout</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <h1>Comments on {{app.name}}</h1>
+      <div id="comments">
+        <ul class="commentlist">
+          {% for comment in comments %}
+            {% if forloop.counter|divisibleby:"2" %}
+              <li class="comment_even">
+            {% else %}
+              <li class="comment_odd">
+            {% endif %}
+            {% if comment.user.pic %}
+              <div class="author"><img class="avatar" src="{{comment.user.pic.url}}" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
+            {% else %}
+              <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
+            {% endif %}
+              <div class="submitdate">{{comment.time}}</div>
+              <p>{{comment.text}}</p>
+            </li>
+          {% empty %}
+            <li>Nobody has written any comment :-(</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+{% endblock content %}
+
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Add a new comment</h2>
+        <div id="respond">
+          <form action="/app/{{app.short_name}}/comments/create/" method="post">
+            {% csrf_token %}
+            <p>
+              <textarea name="text" id="comment" cols="100%" rows="10"></textarea>
+              <label for="text" style="display:none;"><small>Comment (required)</small></label>
+            </p>
+            <p>
+              <input name="submit" type="submit" id="submit" value="Comment" />
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+

@@ -40,7 +40,8 @@ class UserProfilesList(WebResource):
             lname = self.request.GET.get('last_name', "")
             email = self.request.GET.get('email', "")
             
-            users = Profile.objects.exclude(username=guest.username)
+            users = Profile.objects.order_by('first_name', 'last_name', \
+                    'username').exclude(username=guest.username)
             search = {}
             
             if uname != "":

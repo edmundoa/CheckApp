@@ -28,15 +28,18 @@ from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class App(WebResource):
     
+    NUM_COMMENTS = 10
+    
     def process_GET(self):
         guest = self.request.user
         app = Application.objects.get(short_name = self.appname)
+        comments = app.comment_set.order_by('-order').all()[:App.NUM_COMMENTS]
         
         if not guest.is_authenticated():
             messages.info(self.request, UserMsgs.LIMITED_VIEW)
         
         return render_to_response('application.html', \
-                {'guest': guest, 'app': app,}, \
+                {'guest': guest, 'app': app, 'comments': comments,}, \
                 context_instance=RequestContext(self.request)) 
     
     def process_PUT(self):

@@ -22,60 +22,63 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
-from checkapp.profiles.models import Profile, Notification
+from checkapp.profiles.models import Application, Comment
+from checkapp.profiles.helpers.data_checker import DataChecker, DataError
 from checkapp.profiles.helpers.user_msgs import UserMsgs
 
-class FriendsList(WebResource):
+class Comment_(WebResource):
     
     def process_GET(self):
         guest = self.request.user
         
         if guest.is_authenticated():
-            if guest.username == self.username:
-                friends = guest.friends.all().order_by('first_name', \
-                        'last_name', 'username')
-                return render_to_response('friends_list.html', \
-                        {'guest': guest, 'friends': friends,}, \
-                        context_instance=RequestContext(self.request))
-            else:
-                messages.error(self.request, UserMsgs.FORBIDDEN)
-                return HttpResponseRedirect('/profile/%s/' % self.username)
-        else:
-            messages.error(self.request, UserMsgs.LOGIN)
-            return HttpResponseRedirect('/login/')
-        
-    def process_POST(self):
-        guest = self.request.user
-        
-        if guest.is_authenticated():
-            friend = Profile.objects.get(username = self.friend)
-            guest.friends.add(friend)
-            guest.save()
+            app = Application.objects.get(short_name = self.appname)
+            comment = Comment.objects.get(app = app, order = self.commentno)
             
-            notification = Notification()
-            notification.user = friend
-            notification.text = ("%s (%s) has added you as a friend." % \
-                    (guest.first_name, guest.username))
-            notification.url = ("/profile/%s/" % (guest.username))
-            notification.save()
-            
-            messages.success(self.request, UserMsgs.FRIEND_ADDED)
-            return HttpResponseRedirect('/profile/%s/friends/' % guest.username)
+            return render_to_response('comment.html', \
+                    {'guest': guest, 'app': app, \
+                    'comment': comment, 'edit': False,}, \
+                    context_instance=RequestContext(self.request))
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')
     
-    def process_DELETE(self):
+    def process_PUT(self):
         guest = self.request.user
         
         if guest.is_authenticated():
-            friend = Profile.objects.get(username = self.friend)
-            guest.friends.remove(friend)
-            guest.save()
+            app = Application.objects.get(short_name = self.appname)
+            comment = Comment.objects.get(app = app, order = self.commentno)
             
-            messages.success(self.request, UserMsgs.FRIEND_REMOVED)
-            return HttpResponseRedirect('/profile/%s/friends/' % guest.username)
+            text = self.request.POST.get('text', '')
+            comment.text = text
+            comment.save()
+            return HttpResponseRedirect('/app/%s/comment/%s/' % \
+                    (app.short_name, comment.order))
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')
+
+
+class CommentForm(WebResource):
+    
+    def process_GET(self):
+        guest = self.request.user
+        
+        if guest.is_authenticated():
+            app = Application.objects.get(short_name = self.appname)
+            comment = Comment.objects.get(app = app, order = self.commentno)
+            
+            if guest == comment.user:
+                return render_to_response('comment.html', \
+                        {'guest': guest, 'app': app, \
+                        'comment': comment, 'edit': True,}, \
+                        context_instance=RequestContext(self.request))
+            else:
+                messages.error(self.request, UserMsgs.FORBIDDEN)
+                return HttpResponseRedirect('/profile/%s/' % guest.username)
+        else:
+            messages.error(self.request, UserMsgs.LOGIN)
+            return HttpResponseRedirect('/login/')
+
 

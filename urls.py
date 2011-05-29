@@ -9,6 +9,10 @@ from checkapp.profiles.resources.user_profile import UserProfile, \
         UserProfileForm
 from checkapp.profiles.resources.user_profiles_list import UserProfilesList
 from checkapp.profiles.resources.friends_list import FriendsList
+from checkapp.profiles.resources.notifications_list import NotificationsList
+from checkapp.profiles.resources.comment import Comment_, CommentForm
+from checkapp.profiles.resources.comments_list import CommentsList
+
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -35,6 +39,14 @@ urlpatterns = patterns('',
     (r'^apps/create/$', AppsList(),),
     (r'^apps/new/$',    AppForm(),),
     (r'^app/(?P<appname>[\w-]+)/$', App(),),
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/$',   \
+            Comment_(),),
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/edit/$',  \
+            Comment_(),),
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/form/$',  \
+            CommentForm(),),
+    (r'^app/(?P<appname>[\w-]+)/comments/$',    CommentsList(),),
+    (r'^app/(?P<appname>[\w-]+)/comments/create/$', CommentsList(),),
     (r'^app/(?P<appname>[\w-]+)/edit/$',    App(),),
     (r'^app/(?P<appname>[\w-]+)/form/$',    AppForm(),),
     
@@ -44,6 +56,7 @@ urlpatterns = patterns('',
     (r'^profiles/new/$',    UserProfileForm(),),
     (r'^profile/(?P<username>[\w-]+)/$',    UserProfile(),),
     (r'^profile/(?P<username>[\w-]+)/apps/$',   AppsList(),),
+    (r'^profile/(?P<username>[\w-]+)/comments/$',   CommentsList(),),
     (r'^profile/(?P<username>[\w-]+)/edit/$',   UserProfile(),),
     (r'^profile/(?P<username>[\w-]+)/form/$',   UserProfileForm(),),
     (r'^profile/(?P<username>[\w-]+)/friends/$',    FriendsList(),),
@@ -51,6 +64,7 @@ urlpatterns = patterns('',
             FriendsList(),),
     (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/del/$',  \
             FriendsList(),),
+    (r'^profile/(?P<username>[\w-]+)/notifications/$',  NotificationsList(),),
 )
 
 if settings.DEBUG:

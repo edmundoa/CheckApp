@@ -35,18 +35,21 @@ class AppsList(WebResource):
         
         if self.username:
             # List user applications
-            if (guest.is_authenticated()) and \
-                    (guest.username == self.username):
-                apps = guest.owner.all()
-                categories = Category.objects.all()
-                
-                return render_to_response('apps_list.html', \
-                        {'guest': guest, 'apps': apps, 'cats': categories, \
-                        'user': True,}, \
-                        context_instance=RequestContext(self.request))
+            if guest.is_authenticated():
+                if guest.username == self.username:
+                    apps = guest.owner.all().order_by('name')
+                    categories = Category.objects.all()
+                    
+                    return render_to_response('apps_list.html', \
+                            {'guest': guest, 'apps': apps, \
+                            'cats': categories, 'user': True,}, \
+                            context_instance=RequestContext(self.request))
+                else:
+                    messages.error(self.request, UserMsgs.FORBIDDEN)
+                    return HttpResponseRedirect('/apps/')
             else:
-                messages.error(self.request, UserMsgs.FORBIDDEN)
-                return HttpResponseRedirect('')
+                messages.error(self.request, UserMsgs.LOGIN)
+                return HttpResponseRedirect('/login/')
         else:
             # List all applications
             appname = self.request.GET.get('name', "")
@@ -54,7 +57,7 @@ class AppsList(WebResource):
             license = self.request.GET.get('license', "")
             catname = self.request.GET.get('category', "")
             
-            apps = Application.objects.all()
+            apps = Application.objects.all().order_by('name')
             search = {}
             
             if appname != "":

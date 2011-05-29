@@ -15,14 +15,14 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first current"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
-      <li>|</li>
       {% if guest.is_authenticated %}
-        <li><a href="/apps/new/">Add an application</a></li>
+        <li class="first current"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        <li>|</li>
+        <li><a href="/apps/new/">New application</a></li>
         <li>|</li>
         <li><a href="/logout/">Logout</a></li>
       {% else %}
-        <li><a href="/login/">Login</a></li>
+        <li class="first"><a href="/login/">Login</a></li>
       {% endif %}
     </ul>
 {% endblock %}
