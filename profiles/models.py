@@ -76,6 +76,8 @@ class Application(models.Model):
     license = models.CharField(max_length=50, null=True, \
             verbose_name="Application license")
     url = models.URLField(verbose_name="Application URL")
+#    twitter = models.CharField(max_length=150, verbose_name="Twitter profile")
+#    facebook = models.CharField(max_length=150, verbose_name="FB profile")
     owner = models.ForeignKey("Profile", blank=True, null=True, \
             related_name="owner", \
             verbose_name="Application administrator")
@@ -138,7 +140,6 @@ class Comment(models.Model):
     
     def save(self, *args, **kwargs):
         lock = threading.Lock()
-        
         lock.acquire()
         
         try:
@@ -148,7 +149,6 @@ class Comment(models.Model):
                     self.order = comment.order + 1
                 except IndexError:
                     self.order = 1
-            
             super(Comment, self).save(*args, **kwargs)
         finally:
             lock.release()

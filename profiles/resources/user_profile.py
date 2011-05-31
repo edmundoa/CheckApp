@@ -29,6 +29,7 @@ from checkapp.profiles.helpers.user_msgs import UserMsgs
 class UserProfile(WebResource):
     
     NUM_FRIENDS = 5
+    NUM_CHECKAPPS = 5
     NUM_COMMENTS = 5
     
     def process_GET(self):
@@ -36,14 +37,16 @@ class UserProfile(WebResource):
         
         if guest.is_authenticated():
             host = Profile.objects.get(username = self.username)
-            friends = host.friends.all().order_by('?')\
+            friends = host.friends.all().order_by('?') \
                     [:UserProfile.NUM_FRIENDS]
-            comments = host.comment_set.all().order_by('-time')\
+            checkapps = host.checkapp_set.all().order_by('-time') \
+                    [:UserProfile.NUM_CHECKAPPS]
+            comments = host.comment_set.all().order_by('-time') \
                     [:UserProfile.NUM_COMMENTS]
             
             return render_to_response('profile.html', \
-                    {'guest': guest, 'host': host, 'friends': friends,\
-                    'comments': comments,}, \
+                    {'guest': guest, 'host': host, 'friends': friends, \
+                    'checkapps': checkapps, 'comments': comments,}, \
                     context_instance=RequestContext(self.request))
         else:
             messages.error(self.request, UserMsgs.LOGIN)

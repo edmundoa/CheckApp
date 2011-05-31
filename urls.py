@@ -12,6 +12,8 @@ from checkapp.profiles.resources.friends_list import FriendsList
 from checkapp.profiles.resources.notifications_list import NotificationsList
 from checkapp.profiles.resources.comment import Comment_, CommentForm
 from checkapp.profiles.resources.comments_list import CommentsList
+from checkapp.profiles.resources.checkapp_ import CheckApp_
+from checkapp.profiles.resources.checkapps_list import CheckAppsList
 
 
 # Uncomment the next two lines to enable the admin:
@@ -39,11 +41,11 @@ urlpatterns = patterns('',
     (r'^apps/create/$', AppsList(),),
     (r'^apps/new/$',    AppForm(),),
     (r'^app/(?P<appname>[\w-]+)/$', App(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/$',   \
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/$',\
             Comment_(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/edit/$',  \
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/edit/$',\
             Comment_(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/form/$',  \
+    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/form/$',\
             CommentForm(),),
     (r'^app/(?P<appname>[\w-]+)/comments/$',    CommentsList(),),
     (r'^app/(?P<appname>[\w-]+)/comments/create/$', CommentsList(),),
@@ -56,6 +58,11 @@ urlpatterns = patterns('',
     (r'^profiles/new/$',    UserProfileForm(),),
     (r'^profile/(?P<username>[\w-]+)/$',    UserProfile(),),
     (r'^profile/(?P<username>[\w-]+)/apps/$',   AppsList(),),
+    (r'^profile/(?P<username>[\w-]+)/checkapp/(?P<appname>[\w-]+)/$',\
+            CheckApp_(),),
+    (r'^profile/(?P<username>[\w-]+)/checkapp/(?P<appname>[\w-]+)/create/$',\
+            CheckApp_(),),
+    (r'^profile/(?P<username>[\w-]+)/checkapps/$',  CheckAppsList(),),
     (r'^profile/(?P<username>[\w-]+)/comments/$',   CommentsList(),),
     (r'^profile/(?P<username>[\w-]+)/edit/$',   UserProfile(),),
     (r'^profile/(?P<username>[\w-]+)/form/$',   UserProfileForm(),),

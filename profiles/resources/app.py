@@ -34,12 +34,16 @@ class App(WebResource):
         guest = self.request.user
         app = Application.objects.get(short_name = self.appname)
         comments = app.comment_set.order_by('-order').all()[:App.NUM_COMMENTS]
+        checkapps = None
         
         if not guest.is_authenticated():
             messages.info(self.request, UserMsgs.LIMITED_VIEW)
+        else:
+            checkapps = app.checkapp_set.filter(user = guest)
         
         return render_to_response('application.html', \
-                {'guest': guest, 'app': app, 'comments': comments,}, \
+                {'guest': guest, 'app': app, 'comments': comments,\
+                'checkapps': checkapps}, \
                 context_instance=RequestContext(self.request)) 
     
     def process_PUT(self):

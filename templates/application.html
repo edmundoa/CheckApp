@@ -65,7 +65,7 @@
                 <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
               {% endif %}
                 <div class="submitdate">{{comment.time}}</div>
-                <p>{{comment.text}}</p>
+                {{comment.text|linebreaks}}
               </li>
             {% empty %}
               <li>Nobody has written any comment :-(</li>
@@ -98,20 +98,22 @@
       <h2>Stats</h2>
       <ul>
         {% if guest.is_authenticated %}
-          <li>Your check-apps: </li>
+          <li>Your check-apps: {{checkapps.count}}</li>
         {% endif %}
-        <li>Total check-apps: </li>
+        <li>Total check-apps: {{app.checkapp_set.count}}</li>
         {% if app.superuser %}
           <li>Superuser: {{app.superuser.name}}</li>
         {% endif %}
       </ul>
     </div>
-    {% if guest.is_authenticated %}
-      <div class="holder">
-        <h2>Check-app</h2>
-        <p>Are you using this app? Then check it app!</p>
-      </div>
-    {% endif %}
+    <div class="holder">
+      <h2>Check-app</h2>
+        {% if guest.is_authenticated %}
+          <p>Are you using this app? Then <a href="/profile/{{guest.username}}/checkapp/{{app.short_name}}/">check-app</a>!</p>
+        {% else %}
+          <p>Please register if you want to check-app.</p>
+        {% endif %}
+    </div>
   </div>
 {% endblock %}
 

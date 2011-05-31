@@ -51,15 +51,34 @@
       {% endif %}
       <h1>{{host.first_name|capfirst}}{% if host.last_name %} {{host.last_name|capfirst}}{% endif %}</h1>
       <ul>
-        <li>Total check-apps: </li>
-        <li>Number of comments: {{host.comment_set.all|length}}</li>
+        <li>Total check-apps: {{host.checkapp_set.count}}</li>
+        <li>Number of comments: {{host.comment_set.count}}</li>
       </ul>
       <div class="clear"></div>
-      <h2>Latest check-apps</h2>
-      <ul>
-        <li>App #1</li>
-        <li>App #2</li>
-      </ul>
+      <div id="checkapps">
+        <h2>Latest check-apps</h2>
+        <ul>
+          {% for checkapp in checkapps %}
+            {% if forloop.counter|divisibleby:"2" %}
+              <li class="checkapp_even">
+            {% else %}
+              <li class="checkapp_odd">
+            {% endif %}
+            <div><a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a> {{checkapp.time|timesince}} ago.</div>
+            {% if checkapp.text %}
+              <div>{{checkapp.text}}</div>
+            {% endif %}
+            </li>
+          {% empty %}
+            <li>You haven't checked any app yet.</li>
+          {% endfor %}
+        </ul>
+        {% ifequal guest host %}
+          {% if checkapps %}
+            <p class="readmore"><a href="/profile/{{host.username}}/checkapps/">More checkapps &raquo;</a></p>
+          {% endif %}
+        {% endifequal %}
+      </div>
       <div id="comments">
         <h2>Latest comments</h2>
         <ul class="commentlist">
@@ -75,7 +94,7 @@
               <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">on</span> <span class="name"><a href="/app/{{comment.app.short_name}}/">{{comment.app.name}}</a>:</span></div>
             {% endif %}
               <div class="submitdate">{{comment.time}}</div>
-              <p>{{comment.text}}</p>
+              {{comment.text|linebreaks}}
             </li>
           {% empty %}
             <li>You haven't written any comment :-(</li>

@@ -44,7 +44,7 @@
               <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
             {% endif %}
               <div class="submitdate">{{comment.time}}</div>
-              <p>{{comment.text}}</p>
+              {{comment.text|linebreaks}}
             </li>
           {% empty %}
             <li>Nobody has written any comment :-(</li>
