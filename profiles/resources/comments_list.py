@@ -25,7 +25,7 @@ from checkapp.profiles.resources.web_resource import WebResource
 from checkapp.profiles.models import Application, Profile, Comment
 from checkapp.profiles.helpers.data_checker import DataChecker, DataError
 from checkapp.profiles.helpers.user_msgs import UserMsgs
-import threading
+from checkapp.profiles.helpers.merits_checker import MeritsChecker
 
 class CommentsList(WebResource):
     
@@ -70,6 +70,10 @@ class CommentsList(WebResource):
                 comment.save()
                 
                 messages.success(self.request, UserMsgs.COMMENT_ADDED)
+                
+                if MeritsChecker.check_comments(guest):
+                    messages.info(self.request, UserMsgs.MERIT_ACHIEVED)
+                
                 return HttpResponseRedirect('/app/%s/comments/' % \
                         app.short_name)
             except:

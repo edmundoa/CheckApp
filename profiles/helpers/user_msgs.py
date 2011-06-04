@@ -29,8 +29,9 @@ class UserMsgs:
     FRIEND_ADDED = "Whoa! You have a new friend ;-)"
     FRIEND_REMOVED = "You have lost a friend :-("
     CHECKAPP_DONE = "Great! Thanks for checking app!"
+    MERIT_ACHIEVED = "Congratulations! You have achieved a new merit."
     
-    # Information messages
+    # Warning messages
     FORM_ERROR = "There are some errors on your data:"
     LIMITED_VIEW = "You can't fully enjoy CheckApp if you don't login."
     CHECKAPPS_EXCEEDED = "Sorry, you have made your five check-apps today :-("

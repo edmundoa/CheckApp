@@ -14,6 +14,7 @@ from checkapp.profiles.resources.comment import Comment_, CommentForm
 from checkapp.profiles.resources.comments_list import CommentsList
 from checkapp.profiles.resources.checkapp_ import CheckApp_
 from checkapp.profiles.resources.checkapps_list import CheckAppsList
+from checkapp.profiles.resources.merits_list import MeritsList
 
 
 # Uncomment the next two lines to enable the admin:
@@ -71,6 +72,7 @@ urlpatterns = patterns('',
             FriendsList(),),
     (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/del/$',  \
             FriendsList(),),
+    (r'^profile/(?P<username>[\w-]+)/merits/$',   MeritsList(),),
     (r'^profile/(?P<username>[\w-]+)/notifications/$',  NotificationsList(),),
 )
 

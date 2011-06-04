@@ -37,7 +37,7 @@ class App(WebResource):
         checkapps = None
         
         if not guest.is_authenticated():
-            messages.info(self.request, UserMsgs.LIMITED_VIEW)
+            messages.warning(self.request, UserMsgs.LIMITED_VIEW)
         else:
             checkapps = app.checkapp_set.filter(user = guest)
         
@@ -90,7 +90,7 @@ class App(WebResource):
                     messages.success(self.request, UserMsgs.APP_EDITED)
                     return HttpResponseRedirect('/app/%s/' % app.short_name)
                 except DataError as error:
-                    messages.info(self.request, UserMsgs.FORM_ERROR)
+                    messages.warning(self.request, UserMsgs.FORM_ERROR)
                     messages.error(self.request, error.msg)
                     return HttpResponseRedirect('/app/%s/form/' % \
                             app.short_name)

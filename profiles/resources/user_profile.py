@@ -86,7 +86,7 @@ class UserProfile(WebResource):
                     messages.success(self.request, UserMsgs.USER_EDITED)
                     return HttpResponseRedirect('/profile/%s/' % self.username)
                 except DataError as error:
-                    messages.info(self.request, UserMsgs.FORM_ERROR)
+                    messages.warning(self.request, UserMsgs.FORM_ERROR)
                     messages.error(self.request, error.msg)
                     return HttpResponseRedirect('/profile/%s/form/' % \
                             self.username)

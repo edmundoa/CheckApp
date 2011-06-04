@@ -1,3 +1,24 @@
+2011-06-04  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * profiles/helpers/merits_checker.py:
+    * profiles/resources/merits_list.py:
+    * templates/merits_list.html:
+    * profiles/helpers/user_msgs.py:
+    * profiles/models.py:
+    * profiles/resources/app.py:
+    * profiles/resources/apps_list.py:
+    * profiles/resources/checkapp_.py:
+    * profiles/resources/comments_list.py:
+    * profiles/resources/user_profile.py:
+    * profiles/resources/user_profiles_list.py:
+    * templates/profile.html:
+    * urls.py:
+        Changes made:
+            - Users will achieve merits while they use CheckApp.
+            - Users can see merits achieved by other users.
+        Among other changes, there are some bug-fixes.
+
+
 2011-05-31  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * profiles/resources/checkapp_.py:

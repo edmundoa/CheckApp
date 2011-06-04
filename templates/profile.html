@@ -38,13 +38,13 @@
     <div id="content">
       {% if host.pic %}
         {% ifequal guest host %}
-          <img class="imgr imgm" src="{{host.pic.url}}" alt="Your picture" />
+          <img class="imgr imgm" src="{{host.pic.url}}" alt="My picture" />
         {% else %}
           <img class="imgr imgm" src="{{host.pic.url}}" alt="{{host.first_name}}'s picture" />
         {% endifequal %}
       {% else %}
         {% ifequal guest host %}
-          <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="Your picture" />
+          <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="My picture" />
         {% else %}
           <img class="imgr imgm" src="/files/images/demo/imgl.gif" alt="{{host.first_name}}'s picture" />
         {% endifequal %}
@@ -111,15 +111,15 @@
     <div id="column">
       <div class="holder">
         {% ifequal guest host %}
-          <h2>Your Merits</h2>
+          <h2>My Merits</h2>
         {% else %}
           <h2>{{host.first_name}}'s Merits</h2>
         {% endifequal %}
         
         <ul>
-          {% for i in host.pins.all %}
+          {% for pin in host.pins.all %}
             <li>
-              <p class="imgholder"><img src="/files/images/demo/240x90.gif" alt="" /></p>
+              <p class="imgholder"><img class="imgs" src="{{pin.image.url}}" alt="{{pin.name}}" title="{{pin.name}}" /></p>
             </li>
           {% empty %}
             <li>
@@ -131,7 +131,7 @@
             </li>
           {% endfor %}
         </ul>
-        <p class="readmore"><a href="#">More &raquo;</a></p>
+        <p class="readmore"><a href="/profile/{{host}}/merits/">More &raquo;</a></p>
       </div>
       <div class="holder">
         {% ifequal guest host %}

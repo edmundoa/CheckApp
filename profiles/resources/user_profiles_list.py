@@ -102,7 +102,7 @@ class UserProfilesList(WebResource):
             messages.success(self.request, UserMsgs.USER_CREATED)
             return HttpResponseRedirect('/profile/%s/' % user.username)
         except DataError as error:
-            messages.info(self.request, UserMsgs.FORM_ERROR)
+            messages.warning(self.request, UserMsgs.FORM_ERROR)
             messages.error(self.request, error.msg)
             return HttpResponseRedirect('/profiles/new/')
 

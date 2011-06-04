@@ -22,9 +22,10 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
-from checkapp.profiles.models import Application, Profile, CheckApp
+from checkapp.profiles.models import Application, Profile, CheckApp, Pin
 from checkapp.profiles.helpers.data_checker import DataChecker, DataError
 from checkapp.profiles.helpers.user_msgs import UserMsgs
+from checkapp.profiles.helpers.merits_checker import MeritsChecker
 from datetime import date
 
 class CheckApp_(WebResource):
@@ -32,7 +33,7 @@ class CheckApp_(WebResource):
     CHECKAPPS_NUMBER = 5
     
     def process_GET(self):
-        guest = Profile.objects.get(username = self.username)
+        guest = self.request.user
         
         if guest.is_authenticated():
             app = Application.objects.get(short_name = self.appname)
@@ -42,20 +43,23 @@ class CheckApp_(WebResource):
                     time__day = today.day).count()
             
             if checkapps_no <= CheckApp_.CHECKAPPS_NUMBER:
-                last_checkapp = guest.checkapp_set.all().order_by('-time')[0]
+                last_checkapp = None
+                
+                if checkapps_no > 0:
+                    last_checkapp = guest.checkapp_set.all().order_by('-time')[0]
                 return render_to_response('checkapp_confirm.html', \
                         {'guest': guest, 'app': app, 'ca_no': checkapps_no, \
                         'last_ca': last_checkapp,}, \
                         context_instance=RequestContext(self.request))
             else:
-                messages.info(self.request, UserMsgs.CHECKAPPS_EXCEEDED)
+                messages.warning(self.request, UserMsgs.CHECKAPPS_EXCEEDED)
                 return HttpResponseRedirect('/app/%s/' % app.short_name)
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')
     
     def process_PUT(self):
-        guest = Profile.objects.get(username = self.username)
+        guest = self.request.user
         
         if guest.is_authenticated():
             app = Application.objects.get(short_name = self.appname)
@@ -74,9 +78,13 @@ class CheckApp_(WebResource):
                 checkapp.save()
                 
                 messages.success(self.request, UserMsgs.CHECKAPP_DONE)
+                
+                if MeritsChecker.check_checkapps(guest):
+                    messages.info(self.request, UserMsgs.MERIT_ACHIEVED)
+                
                 return HttpResponseRedirect('/app/%s/' % app.short_name)
             else:
-                messages.info(self.request, UserMsgs.CHECKAPPS_EXCEEDED)
+                messages.warning(self.request, UserMsgs.CHECKAPPS_EXCEEDED)
                 return HttpResponseRedirect('/app/%s/' % app.short_name)
         else:
             messages.error(self.request, UserMsgs.LOGIN)

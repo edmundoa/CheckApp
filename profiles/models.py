@@ -163,7 +163,6 @@ class Merit(models.Model):
     user = models.ForeignKey("Profile", \
             verbose_name="User who achieved a merit")
     pin = models.ForeignKey("Pin", verbose_name="Pin won")
-    app = models.ForeignKey("Application", verbose_name="Related application")
     time = models.DateTimeField(auto_now_add=True, \
             verbose_name="Time of merit achievement")
     
@@ -174,10 +173,27 @@ class Merit(models.Model):
 
 class Pin(models.Model):
     '''Represents a kind of price for the user'''
+    
+    GRADES = (
+        (0, 1, 2,  3,   4,),   # Number of grades
+        (1, 1, 10, 100, 500,),
+        (2, 1, 10, 50,  100,),
+    )
+    
+    TOTAL_CHECKAPPS_CAT = GRADES[1][0]
+    TOTAL_COMMENTS_CAT = GRADES[2][0]
+    
+    ZERO_GRADE = GRADES[0][1]
+    FIRST_GRADE = GRADES[0][2]
+    SECOND_GRADE = GRADES[0][3]
+    THIRD_GRADE = GRADES[0][4]
+    
     name = models.CharField(max_length=50, verbose_name="Pin name")
     text = models.CharField(max_length=100, verbose_name="Pin text")
     image = models.ImageField(upload_to="pins", \
             verbose_name="Path to pin image")
+    category = models.IntegerField(verbose_name="Pin category")
+    grade = models.IntegerField(verbose_name="Level of pin")
     
     def __unicode__(self):
         return (("Pin %s") % (self.name))

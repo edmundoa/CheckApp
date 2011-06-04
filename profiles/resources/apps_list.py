@@ -124,7 +124,7 @@ class AppsList(WebResource):
             messages.success(self.request, UserMsgs.APP_ADDED)
             return HttpResponseRedirect('/app/%s/' % app.short_name)
         except DataError as error:
-            messages.info(self.request, UserMsgs.FORM_ERROR)
+            messages.warning(self.request, UserMsgs.FORM_ERROR)
             messages.error(self.request, error.msg)
             return HttpResponseRedirect('/apps/new/')
 
