@@ -22,7 +22,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
-from checkapp.profiles.models import Application, Category, Profile
+from checkapp.profiles.models import Application, Category, Platform, Profile
 from checkapp.profiles.helpers.data_checker import DataChecker, DataError
 from checkapp.profiles.helpers.user_msgs import UserMsgs
 
@@ -37,12 +37,17 @@ class AppsList(WebResource):
             # List user applications
             if guest.is_authenticated():
                 if guest.username == self.username:
-                    apps = guest.owner.all().order_by('name')
-                    categories = Category.objects.all()
+                    app_list = guest.owner.all().order_by('name')
+                    apps = self.paginate_results(app_list, \
+                            AppsList.APPS_PER_PAGE)
+                    
+                    categories = Category.objects.all().order_by('name')
+                    platforms = Platform.objects.all().order_by('name')
                     
                     return render_to_response('apps_list.html', \
                             {'guest': guest, 'apps': apps, \
-                            'cats': categories, 'user': True,}, \
+                            'cats': categories, 'plats': platforms, \
+                            'user': True,}, \
                             context_instance=RequestContext(self.request))
                 else:
                     messages.error(self.request, UserMsgs.FORBIDDEN)
@@ -56,67 +61,99 @@ class AppsList(WebResource):
             developer = self.request.GET.get('developer', "")
             license = self.request.GET.get('license', "")
             catname = self.request.GET.get('category', "")
+            platname = self.request.GET.get('platform', "")
             
-            apps = Application.objects.all().order_by('name')
+            app_list = Application.objects.all().order_by('name')
             search = {}
             
             if appname != "":
-                apps = apps.filter(name__icontains = appname)
+                app_list = app_list.filter(name__icontains = appname)
                 search['name'] = appname
             
             if developer != "":
-                apps = apps.filter(developer__icontains = developer)
+                app_list = app_list.filter(developer__icontains = developer)
                 search['developer'] = appname
             
             if license != "":
-                apps = apps.filter(license__icontains = license)
+                app_list = app_list.filter(license__icontains = license)
                 search['name'] = appname
             
             if catname != "":
                 cat = Category.objects.get(name = catname)
-                apps = apps.filter(category = cat)
+                app_list = app_list.filter(category = cat)
                 search['category'] = catname
             
-            categories = Category.objects.all()
+            if platname != "":
+                plat = Platform.objects.get(name = platname)
+                app_list = app_list.filter(platform = plat)
+                search['platform'] = platname
+            
+            apps = self.paginate_results(app_list, AppsList.APPS_PER_PAGE)
+            categories = Category.objects.all().order_by('name')
+            platforms = Platform.objects.all().order_by('name')
+            
+            if not guest.is_authenticated():
+                messages.warning(self.request, UserMsgs.LIMITED_VIEW)
             
             return render_to_response('apps_list.html', \
                     {'guest': guest, 'apps': apps, 'cats': categories, \
-                    'search': search, 'user': False,}, \
+                    'plats': platforms, 'search': search, 'user': False,}, \
                     context_instance=RequestContext(self.request))
     
     def process_POST(self):
         guest = self.request.user
         
-        sname = self.request.POST.get('app_sname', None)
-        name = self.request.POST.get('app_name', None)
+        form = {}
+        form['sname'] = self.request.POST.get('app_sname', None)
+        form['name'] = self.request.POST.get('app_name', None)
         logo = self.request.FILES.get('logo', None)
-        cat = self.request.POST.get('category', None)
-        devel = self.request.POST.get('devel', None)
-        version = self.request.POST.get('version', None)
-        license = self.request.POST.get('license', None)
-        url = self.request.POST.get('url', None)
-        desc = self.request.POST.get('desc', None)
+        form['cat'] = self.request.POST.get('category', None)
+        form['plat'] = self.request.POST.get('platform', None)
+        form['devel'] = self.request.POST.get('devel', None)
+        form['version'] = self.request.POST.get('version', None)
+        form['license'] = self.request.POST.get('license', None)
+        form['url'] = self.request.POST.get('url', None)
+        form['wiki'] = self.request.POST.get('wiki', None)
+        form['blog'] = self.request.POST.get('blog', None)
+        form['desc'] = self.request.POST.get('desc', None)
         
         try:
-            DataChecker.check_short_name(sname)
-            DataChecker.check_name(name)
-            DataChecker.check_category(cat)
-            DataChecker.check_url(url)
+            DataChecker.check_short_name(form['sname'])
+            DataChecker.check_name(form['name'])
+            DataChecker.check_category(form['cat'])
+            DataChecker.check_platform(form['plat'])
+            
+            if not DataChecker.defined(form['url']):
+                    raise DataError("Website cannot be empty")
+            
+            DataChecker.check_url(form['url'])
+            DataChecker.check_url(form['wiki'])
+            DataChecker.check_url(form['blog'])
+            DataChecker.check_description(form['desc'])
             
             app = Application()
-            app.short_name = sname
-            app.name = name
-            app.description = desc
-            app.developer = devel
-            app.version = version
-            app.license = license
-            app.url = url
+            app.short_name = form['sname']
+            app.name = form['name']
+            app.description = form['desc']
+            app.developer = form['devel']
+            app.version = form['version']
+            app.license = form['license']
+            app.url = form['url']
+            app.wiki = form['wiki']
+            app.blog = form['blog']
             app.owner = guest
             
-            category = Category.objects.get(name=cat)
+            category = Category.objects.get(name=form['cat'])
             app.category = category
             
+            app.save()
+            
+            platform = Platform.objects.get(name=form['plat'])
+            app.platform.clear()
+            app.platform.add(platform)
+            
             if logo is not None:
+                print "logo is not None"
                 app.logo = logo
             
             app.save()
@@ -124,8 +161,14 @@ class AppsList(WebResource):
             messages.success(self.request, UserMsgs.APP_ADDED)
             return HttpResponseRedirect('/app/%s/' % app.short_name)
         except DataError as error:
-            messages.warning(self.request, UserMsgs.FORM_ERROR)
             messages.error(self.request, error.msg)
-            return HttpResponseRedirect('/apps/new/')
+            
+            categories = Category.objects.all().order_by('name')
+            platforms = Platform.objects.all().order_by('name')
+            
+            return render_to_response('application_form.html', \
+                    {'guest': guest, 'form': form, \
+                    'cats': categories, 'plats': platforms,}, \
+                    context_instance=RequestContext(self.request))
 
 

@@ -22,7 +22,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
-from checkapp.profiles.models import Application, Category
+from checkapp.profiles.models import Application, Category, Platform
 from checkapp.profiles.helpers.data_checker import DataChecker, DataError
 from checkapp.profiles.helpers.user_msgs import UserMsgs
 
@@ -52,34 +52,53 @@ class App(WebResource):
         if guest.is_authenticated():
             app = Application.objects.get(short_name = self.appname)
             
+            form = {}
+            
             if app.owner == guest:
-                sname = self.request.POST.get('app_sname', None)
-                name = self.request.POST.get('app_name', None)
+                form['sname'] = self.request.POST.get('app_sname', None)
+                form['name'] = self.request.POST.get('app_name', None)
                 logo = self.request.FILES.get('logo', None)
-                cat = self.request.POST.get('category', None)
-                devel = self.request.POST.get('devel', None)
-                version = self.request.POST.get('version', None)
-                license = self.request.POST.get('license', None)
-                url = self.request.POST.get('url', None)
-                desc = self.request.POST.get('desc', None)
+                form['cat'] = self.request.POST.get('category', None)
+                form['plat'] = self.request.POST.get('platform', None)
+                form['devel'] = self.request.POST.get('devel', None)
+                form['version'] = self.request.POST.get('version', None)
+                form['license'] = self.request.POST.get('license', None)
+                form['url'] = self.request.POST.get('url', None)
+                form['wiki'] = self.request.POST.get('wiki', None)
+                form['blog'] = self.request.POST.get('blog', None)
+                form['desc'] = self.request.POST.get('desc', None)
                 
                 try:
-                    DataChecker.check_short_name(sname)
-                    DataChecker.check_name(name)
-                    DataChecker.check_category(cat)
-                    DataChecker.check_url(url)
+                    DataChecker.check_short_name(form['sname'])
+                    DataChecker.check_name(form['name'])
+                    DataChecker.check_category(form['cat'])
+                    DataChecker.check_platform(form['plat'])
                     
-                    app.short_name = sname
-                    app.name = name
-                    app.description = desc
-                    app.developer = devel
-                    app.version = version
-                    app.license = license
-                    app.url = url
+                    if not DataChecker.defined(form['url']):
+                        raise DataError("Website cannot be empty")
+                    
+                    DataChecker.check_url(form['url'])
+                    DataChecker.check_url(form['wiki'])
+                    DataChecker.check_url(form['blog'])
+                    DataChecker.check_description(form['desc'])
+                    
+                    app.short_name = form['sname']
+                    app.name = form['name']
+                    app.description = form['desc']
+                    app.developer = form['devel']
+                    app.version = form['version']
+                    app.license = form['license']
+                    app.url = form['url']
+                    app.wiki = form['wiki']
+                    app.blog = form['blog']
                     app.owner = guest
                     
-                    category = Category.objects.get(name=cat)
+                    category = Category.objects.get(name=form['cat'])
                     app.category = category
+                    
+                    platform = Platform.objects.get(name=form['plat'])
+                    app.platform.clear()
+                    app.platform.add(platform)
                     
                     if logo is not None:
                         print "logo is not None"
@@ -90,17 +109,22 @@ class App(WebResource):
                     messages.success(self.request, UserMsgs.APP_EDITED)
                     return HttpResponseRedirect('/app/%s/' % app.short_name)
                 except DataError as error:
-                    messages.warning(self.request, UserMsgs.FORM_ERROR)
                     messages.error(self.request, error.msg)
-                    return HttpResponseRedirect('/app/%s/form/' % \
-                            app.short_name)
+                    
+                    categories = Category.objects.all().order_by('name')
+                    platforms = Platform.objects.all().order_by('name')
+                    
+                    return render_to_response('application_form.html', \
+                            {'guest': guest, 'app': app, 'form': form, \
+                            'cats': categories, 'plats': platforms,}, \
+                            context_instance=RequestContext(self.request))
             else:
                 messages.error(self.request, UserMsgs.FORBIDDEN)
                 return HttpResponseRedirect('/app/%s/' % app.short_name)
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')
-    
+
 
 class AppForm(WebResource):
     
@@ -111,22 +135,25 @@ class AppForm(WebResource):
             if self.appname:
                 # Edit an application
                 app = Application.objects.get(short_name = self.appname)
-                categories = Category.objects.all()
+                categories = Category.objects.all().order_by('name')
+                platforms = Platform.objects.all().order_by('name')
                 
                 if app.owner == guest:
                     return render_to_response('application_form.html', \
                             {'guest': guest, 'app': app, \
-                            'cats': categories,}, \
+                            'cats': categories, 'plats': platforms,}, \
                             context_instance=RequestContext(self.request))
                 else:
                     messages.error(self.request, UserMsgs.FORBIDDEN)
                     return HttpResponseRedirect('/app/%s/' % app.short_name)
             else:
                 # Create a new application
-                categories = Category.objects.all()
+                categories = Category.objects.all().order_by('name')
+                platforms = Platform.objects.all().order_by('name')
                 
                 return render_to_response('application_form.html', \
-                        {'guest': guest, 'cats': categories,}, \
+                        {'guest': guest, 'cats': categories, \
+                        'plats': platforms,}, \
                         context_instance=RequestContext(self.request))
         else:
             messages.error(self.request, UserMsgs.LOGIN)

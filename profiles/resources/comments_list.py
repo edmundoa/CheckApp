@@ -29,6 +29,8 @@ from checkapp.profiles.helpers.merits_checker import MeritsChecker
 
 class CommentsList(WebResource):
     
+    NO_PER_PAGE = 10
+    
     def process_GET(self):
         guest = self.request.user
         
@@ -36,7 +38,9 @@ class CommentsList(WebResource):
             if self.appname:
                 # Show comments of an application
                 app = Application.objects.get(short_name = self.appname)
-                comments = app.comment_set.all().order_by('-time')
+                comment_list = app.comment_set.all().order_by('-time')
+                comments = self.paginate_results(comment_list, \
+                        CommentsList.NO_PER_PAGE)
                 
                 return render_to_response('app_comments_list.html', \
                         {'guest': guest, 'app': app, \
@@ -45,7 +49,9 @@ class CommentsList(WebResource):
             else:
                 # Show comments of a user
                 host = Profile.objects.get(username = self.username)
-                comments = host.comment_set.all().order_by('-time')
+                comment_list = host.comment_set.all().order_by('-time')
+                comments = self.paginate_results(comment_list, \
+                        CommentsList.NO_PER_PAGE)
                 
                 return render_to_response('profile_comments_list.html', \
                         {'guest': guest, 'host': host, \
@@ -61,8 +67,11 @@ class CommentsList(WebResource):
         text = self.request.POST.get('text', None)
         
         if guest.is_authenticated():
+            app = Application.objects.get(short_name = self.appname)
+            
             try:
-                app = Application.objects.get(short_name = self.appname)
+                DataChecker.check_comment(text)
+                
                 comment = Comment()
                 comment.user = guest
                 comment.app = app
@@ -76,9 +85,15 @@ class CommentsList(WebResource):
                 
                 return HttpResponseRedirect('/app/%s/comments/' % \
                         app.short_name)
-            except:
-                messages.error(self.request, UserMsgs.UNEXPECTED_ERROR)
-                return HttpResponseRedirect('/profile/%s/' % guest.username)
+            except DataError as error:
+                messages.error(self.request, error.msg)
+                
+                comments = app.comment_set.all().order_by('-time')
+                
+                return render_to_response('app_comments_list.html', \
+                        {'guest': guest, 'app': app, \
+                        'comments': comments, 'text': text,}, \
+                        context_instance=RequestContext(self.request))
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')

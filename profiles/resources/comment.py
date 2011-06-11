@@ -50,11 +50,23 @@ class Comment_(WebResource):
             app = Application.objects.get(short_name = self.appname)
             comment = Comment.objects.get(app = app, order = self.commentno)
             
-            text = self.request.POST.get('text', '')
-            comment.text = text
-            comment.save()
-            return HttpResponseRedirect('/app/%s/comment/%s/' % \
-                    (app.short_name, comment.order))
+            try:
+                text = self.request.POST.get('text', '')
+                
+                DataChecker.check_comment(text)
+                
+                comment.text = text
+                comment.save()
+                
+                return HttpResponseRedirect('/app/%s/comment/%s/' % \
+                        (app.short_name, comment.order))
+            except DataError as error:
+                messages.error(self.request, error.msg)
+                
+                return render_to_response('comment.html', \
+                        {'guest': guest, 'app': app, \
+                        'comment': comment, 'edit': True, 'text': text,}, \
+                        context_instance=RequestContext(self.request))
         else:
             messages.error(self.request, UserMsgs.LOGIN)
             return HttpResponseRedirect('/login/')

@@ -40,25 +40,28 @@ class UserProfilesList(WebResource):
             lname = self.request.GET.get('last_name', "")
             email = self.request.GET.get('email', "")
             
-            users = Profile.objects.order_by('first_name', 'last_name', \
+            user_list = Profile.objects.order_by('first_name', 'last_name', \
                     'username').exclude(username=guest.username)
             search = {}
             
             if uname != "":
-                users = users.filter(username__icontains = uname)
+                user_list = user_list.filter(username__icontains = uname)
                 search['username'] = uname
             
             if fname != "":
-                users = users.filter(first_name__icontains = fname)
+                user_list = user_list.filter(first_name__icontains = fname)
                 search['first_name'] = fname
             
             if lname != "":
-                users = users.filter(last_name__icontains = lname)
+                user_list = user_list.filter(last_name__icontains = lname)
                 search['last_name'] = lname
             
             if email != "":
-                users = users.filter(email = email)
+                user_list = user_list.filter(email = email)
                 search['email'] = email
+            
+            users = self.paginate_results(user_list, \
+                    UserProfilesList.USERS_PER_PAGE)
             
             return render_to_response('profiles_list.html', \
                     {'guest': guest, 'users': users, 'search': search,}, \
@@ -68,32 +71,34 @@ class UserProfilesList(WebResource):
             return HttpResponseRedirect('/login/')
     
     def process_POST(self):
-        uname = self.request.POST.get('username', None)
-        fname = self.request.POST.get('first_name', None)
-        lname = self.request.POST.get('last_name', None)
-        email = self.request.POST.get('email', None)
+        form = {}
+        form['uname'] = self.request.POST.get('username', None)
+        form['fname'] = self.request.POST.get('first_name', None)
+        form['lname'] = self.request.POST.get('last_name', None)
+        form['email'] = self.request.POST.get('email', None)
         picture = self.request.FILES.get('pic', None)
         password = self.request.POST.get('password', None)
         cpassword = self.request.POST.get('cpassword', None)
         
         try:
-            DataChecker.check_username(uname)
-            DataChecker.user_exists(uname)
-            DataChecker.check_first_name(fname)
-            DataChecker.check_email(email)
+            DataChecker.check_username(form['uname'])
+            DataChecker.user_exists(form['uname'])
+            DataChecker.check_first_name(form['fname'])
+            DataChecker.check_last_name(form['lname'])
+            DataChecker.check_email(form['email'])
             DataChecker.check_password(password, cpassword)
             
             user = Profile()
-            user.username = uname
-            user.first_name = fname
-            user.last_name = lname
-            user.email = email
+            user.username = form['uname']
+            user.first_name = form['fname']
+            user.last_name = form['lname']
+            user.email = form['email']
             user.set_password(password)
             
             if picture:
                 user.pic = picture
             
-            user.save ()
+            user.save()
             
             # User is logged in without typing again its data
             user = authenticate(username=uname, password=password)
@@ -102,7 +107,9 @@ class UserProfilesList(WebResource):
             messages.success(self.request, UserMsgs.USER_CREATED)
             return HttpResponseRedirect('/profile/%s/' % user.username)
         except DataError as error:
-            messages.warning(self.request, UserMsgs.FORM_ERROR)
             messages.error(self.request, error.msg)
-            return HttpResponseRedirect('/profiles/new/')
+            
+            return render_to_response('profile_creation_form.html', \
+                    {'form': form,}, \
+                    context_instance=RequestContext(self.request))
 

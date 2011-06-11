@@ -4,55 +4,77 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
 
 {% block content %}
-    <form enctype="multipart/form-data" action="/profiles/create/" method="post">
-      {% csrf_token %}
-      <ul>
-        <li>
-          <label for="username">Username:</label>
-          <input type="text" name="username" maxlength="30"
-              value="{{guest.username}}"
-              title="Insert your username"/>
-        </li>
-        <li>
-          <label for="pic">Picture:</label>
-          <input type="file" name="pic" title="Upload your picture"/>
-        </li>
-        <li>
-          <label for="first_name">First name:</label>
-          <input type="text" name="first_name" maxlength="30"
-              value="{{guest.first_name}}"
-              title="Insert your first name"/>
-        </li>
-        <li>
-          <label for="last_name">Last name:</label>
-          <input type="text" name="last_name" maxlength="30"
-              value="{{guest.last_name}}"
-              title="Insert your last name"/>
-        </li>
-        <li>
-          <label for="email">E-Mail:</label>
-          <input type="text" name="email" maxlength="30"
-              value="{{guest.email}}"
-              title="Insert your E-Mail"/>
-        </li>
-        <li>
-          <label for="password">Password:</label>
-          <input type="password" name="password" maxlength="30"
-              title="Insert your password"/>
-        </li>
-        <li>
-          <label for="cpassword">Password confirmation:</label>
-          <input type="password" name="cpassword" maxlength="30"
-              title="Insert your password again"/>
-        </li>
-        <li>
-          <input type="submit" name="submit" value="Submit"/>
-        </li>
-      </ul>
-    </form>
+    <div id="content">
+      <h1>Sign up</h1>
+      <p>Fill the form to become part of CheckApp. All fields are mandatory.</p>
+      <div class="form">
+        <form enctype="multipart/form-data" action="/profiles/create/" method="post">
+          {% csrf_token %}
+          <ul>
+            <li>
+              <label for="username">Username:</label>
+              <input type="text" name="username" maxlength="30"
+                  value="{{form.uname}}"
+                  title="Insert your username"/>
+            </li>
+            <li>
+              <label for="pic">Picture:</label>
+              <input type="file" name="pic" title="Upload your picture"/>
+            </li>
+            <li>
+              <label for="first_name">First name:</label>
+              <input type="text" name="first_name" maxlength="30"
+                  value="{{form.fname}}"
+                  title="Insert your first name"/>
+            </li>
+            <li>
+              <label for="last_name">Last name:</label>
+              <input type="text" name="last_name" maxlength="30"
+                  value="{{form.lname}}"
+                  title="Insert your last name"/>
+            </li>
+            <li>
+              <label for="email">E-Mail:</label>
+              <input type="text" name="email" maxlength="30"
+                  value="{{form.email}}"
+                  title="Insert your E-Mail"/>
+            </li>
+            <li>
+              <label for="password">Password:</label>
+              <input type="password" name="password" maxlength="30"
+                  title="Insert your password"/>
+            </li>
+            <li>
+              <label for="cpassword">Password confirmation:</label>
+              <input type="password" name="cpassword" maxlength="30"
+                  title="Insert your password again"/>
+            </li>
+            <li class="buttons">
+              <input class="submit" type="submit" name="submit" value="Submit"/>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+{% endblock %}
+
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Tips:</h2>
+        <p>Here are some tips that can help you creating your profile:</p>
+        <ul>
+          <li>Your username has to be at least 3 characters long.</li>
+          <li>Your username can contain numbers, characters, dashes and dots.</li>
+          <li>Pick your username carefully. Unluckily, you cannot change it later.</li>
+          <li>Your password has to be at least 6 characters long.</li>
+        </ul>
+      </div>
+    </div>
 {% endblock %}

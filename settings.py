@@ -20,6 +20,15 @@ DATABASES = {
     }
 }
 
+# E-Mail settings
+#DEFAULT_FROM_EMAIL = ''
+#EMAIL_HOST = ''
+#EMAIL_HOST_USER = ''
+#EMAIL_HOST_PASSWORD = ''
+#EMAIL_PORT = 25
+#EMAIL_SUBJECT_PREFIX = '[CheckApp] '
+#EMAIL_USE_TLS = False
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -104,5 +113,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'south',
     'checkapp.profiles',
 )

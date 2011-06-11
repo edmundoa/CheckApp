@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
+from django.contrib.auth.views import redirect_to_login, password_reset, \
+        password_reset_done, password_reset_confirm, password_reset_complete
 from checkapp.profiles.resources.login import Login
 from checkapp.profiles.resources.logout import Logout
 from checkapp.profiles.resources.app import App, \
@@ -31,11 +33,20 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/',    include(admin.site.urls)),
     
-    (r'^$', 'django.views.generic.simple.redirect_to',  {'url': '/login'}),
+    (r'^$', 'django.views.generic.simple.redirect_to',  {'url': '/login/',}),
     
     # Session management
     (r'^login/$',   Login(),),
     (r'^logout/$',  Logout(),),
+    (r'^redirect/$', redirect_to_login, {'login_url': '/login/'}),
+    (r'^reset/$', password_reset, {'template_name': 'reset.html', \
+            'email_template_name': 'email_template.html',}),
+    (r'^reset/done/$', password_reset_done, \
+            {'template_name': 'reset_done.html',}),
+    (r'^reset/confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', \
+            password_reset_confirm, {'template_name': 'reset_confirm.html',}),
+    (r'^reset/complete/$', password_reset_complete, \
+            {'template_name': 'reset_complete.html',}),
     
     # Applications
     (r'^apps/$',    AppsList(),),

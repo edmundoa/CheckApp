@@ -43,10 +43,12 @@ class CheckApp_(WebResource):
                     time__day = today.day).count()
             
             if checkapps_no <= CheckApp_.CHECKAPPS_NUMBER:
-                last_checkapp = None
                 
-                if checkapps_no > 0:
+                try:
                     last_checkapp = guest.checkapp_set.all().order_by('-time')[0]
+                except:
+                    last_checkapp = None
+                
                 return render_to_response('checkapp_confirm.html', \
                         {'guest': guest, 'app': app, 'ca_no': checkapps_no, \
                         'last_ca': last_checkapp,}, \
@@ -71,18 +73,34 @@ class CheckApp_(WebResource):
             if checkapps_no <= CheckApp_.CHECKAPPS_NUMBER:
                 text = self.request.POST.get('comment', '')
                 
-                checkapp = CheckApp()
-                checkapp.user = guest
-                checkapp.app = app
-                checkapp.text = text
-                checkapp.save()
-                
-                messages.success(self.request, UserMsgs.CHECKAPP_DONE)
-                
-                if MeritsChecker.check_checkapps(guest):
-                    messages.info(self.request, UserMsgs.MERIT_ACHIEVED)
-                
-                return HttpResponseRedirect('/app/%s/' % app.short_name)
+                try:
+                    DataChecker.check_ca_comment(text)
+                    
+                    checkapp = CheckApp()
+                    checkapp.user = guest
+                    checkapp.app = app
+                    checkapp.text = text
+                    checkapp.save()
+                    
+                    messages.success(self.request, UserMsgs.CHECKAPP_DONE)
+                    
+                    if MeritsChecker.check_checkapps(guest):
+                        messages.info(self.request, UserMsgs.MERIT_ACHIEVED)
+                    
+                    return HttpResponseRedirect('/app/%s/' % app.short_name)
+                except DataError as error:
+                    messages.error(self.request, error.msg)
+                    
+                    try:
+                        last_checkapp = guest.checkapp_set.all().order_by('-time')[0]
+                    except:
+                        last_checkapp = None
+                    
+                    return render_to_response('checkapp_confirm.html', \
+                            {'guest': guest, 'app': app, \
+                            'ca_no': checkapps_no, \
+                            'last_ca': last_checkapp, 'text': text,}, \
+                            context_instance=RequestContext(self.request))
             else:
                 messages.warning(self.request, UserMsgs.CHECKAPPS_EXCEEDED)
                 return HttpResponseRedirect('/app/%s/' % app.short_name)

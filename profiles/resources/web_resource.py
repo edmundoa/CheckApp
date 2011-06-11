@@ -18,6 +18,7 @@
 # Authors: Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
 from django.http import HttpResponseNotAllowed
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 class WebResource:
     def __call__(self, request, _method='', appname='', username='', \
@@ -45,4 +46,21 @@ class WebResource:
         self.friend = friend
         
         return callback()
+    
+    
+    def paginate_results(self, result_list, max_per_page):
+        paginator = Paginator(result_list, max_per_page)
+        
+        try:
+            page = int(self.request.REQUEST.get('page', '1'))
+        except:
+            page = 1
+        
+        try:
+            results = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            results = paginator.page(paginator.num_pages)
+        
+        return results
+
 

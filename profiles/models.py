@@ -35,6 +35,12 @@ class Profile(User):
     def count_unread(self):
         return self.notification_set.filter(read=False).count()
     
+    def last_checkapp(self):
+        try:
+            return self.checkapp_set.order_by('-time')[0]
+        except:
+            return None
+    
     def __unicode__(self):
         return ("%s") % (self.username)
 
@@ -61,13 +67,16 @@ class Notification(models.Model):
 
 class Application(models.Model):
     '''Represents an application available for check up'''
+    
+    DESC_LENGTH = 300
+    
     short_name = models.CharField(max_length=30, unique=True, \
             verbose_name="Application short name")
     name = models.CharField(max_length=100, unique=True, \
             verbose_name="Application name")
     logo = models.ImageField(upload_to="app_logos/%Y%m%d", blank=True, \
             null=True, verbose_name="Path to application logo")
-    description = models.CharField(max_length=500, \
+    description = models.CharField(max_length=DESC_LENGTH, \
             verbose_name="Application description")
     version = models.CharField(max_length=20, null=True, \
             verbose_name="Latest application version")
@@ -76,8 +85,12 @@ class Application(models.Model):
     license = models.CharField(max_length=50, null=True, \
             verbose_name="Application license")
     url = models.URLField(verbose_name="Application URL")
-#    twitter = models.CharField(max_length=150, verbose_name="Twitter profile")
-#    facebook = models.CharField(max_length=150, verbose_name="FB profile")
+    wiki = models.URLField(null=True, verbose_name="Application Wiki")
+    blog = models.URLField(null=True, verbose_name="Application blog")
+    twitter = models.CharField(max_length=150, null=True, \
+            verbose_name="Twitter profile")
+    facebook = models.CharField(max_length=150, null=True, \
+            verbose_name="FB profile")
     owner = models.ForeignKey("Profile", blank=True, null=True, \
             related_name="owner", \
             verbose_name="Application administrator")
@@ -86,6 +99,8 @@ class Application(models.Model):
             verbose_name="Application superuser")
     category = models.ForeignKey("Category", \
             verbose_name="Application category")
+    platform = models.ManyToManyField("Platform", \
+            verbose_name="Supported platforms")
     
     def __unicode__(self):
         return (("Application %s on %s") % (self.name, self.category.name))
@@ -97,7 +112,16 @@ class Category(models.Model):
             verbose_name="Category name")
     
     def __unicode__(self):
-        return (("Category %s") % (self.name))
+        return (("%s") % (self.name))
+
+
+class Platform(models.Model):
+    '''Represents a platform where an application runs'''
+    name = models.CharField(max_length=100, unique=True, \
+            verbose_name="Platform name")
+    
+    def __unicode__(self):
+        return (("%s") % (self.name))
 
 
 class Screenshot(models.Model):
@@ -115,11 +139,14 @@ class Screenshot(models.Model):
 
 class CheckApp(models.Model):
     '''Represents a check up of an application'''
+    
+    COMMENT_LENGTH = 140
+    
     user = models.ForeignKey("Profile", \
             verbose_name="User who has checked up")
     app = models.ForeignKey("Application", \
             verbose_name="Application checked up")
-    text = models.CharField(max_length=500, null=True, \
+    text = models.CharField(max_length=COMMENT_LENGTH, null=True, \
             verbose_name="Message for the check up")
     time = models.DateTimeField(auto_now_add=True, \
             verbose_name="Time of check up")
@@ -131,10 +158,14 @@ class CheckApp(models.Model):
 
 class Comment(models.Model):
     '''Represents a comment on an application profile'''
+    
+    COMMENT_LENGTH = 2048
+    
     order = models.IntegerField(verbose_name="Application's number of comment")
     user = models.ForeignKey("Profile", verbose_name="User who has commented")
     app = models.ForeignKey("Application", verbose_name="Application commented")
-    text = models.CharField(max_length=500, verbose_name="Commented text")
+    text = models.CharField(max_length=COMMENT_LENGTH, \
+            verbose_name="Commented text")
     time = models.DateTimeField(auto_now_add=True, \
             verbose_name="Time when user commented")
     
@@ -196,6 +227,6 @@ class Pin(models.Model):
     grade = models.IntegerField(verbose_name="Level of pin")
     
     def __unicode__(self):
-        return (("Pin %s") % (self.name))
+        return (("%s") % (self.name))
 
 

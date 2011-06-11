@@ -6,7 +6,7 @@
         <li><a href="/">Home</a></li>
         {% if guest.is_authenticated %}
           <li><a href="/profile/{{guest.username}}/">Me</a></li>
-          <li><a href="/profiles/">People</a></li>
+          <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
         {% endif %}
         <li class="last"><a class="active" href="/apps/">Apps</a></li>
       </ul>
@@ -16,7 +16,11 @@
 {% block breadcrumb %}
     <ul>
       {% if guest.is_authenticated %}
-        <li class="first current"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        {% if user %}
+          <li class="first current"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        {% else %}
+          <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        {% endif %}
         <li>|</li>
         <li><a href="/apps/new/">New application</a></li>
         <li>|</li>
@@ -29,22 +33,58 @@
 
 {% block content %}
     <div id="content">
-      <ul>
-        {% for app in apps %}
-          <li>
-            <div class="item">
-              <a href="/app/{{app.short_name}}/">
-              {% if app.logo %}
-                <img class="imgl imgs" src="{{app.logo.url}}" alt="{{app.name}}'s logo" />
-              {% else %}
-                <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="{{app.name}}'s picture" />
-              {% endif %}
-              </a>
-              <p><a href="/app/{{app.short_name}}/">{{app.name}}</a></p>
+      <div id="apps">
+        {% if user %}
+            <h1>Your applications</h1>
+          {% if apps %}
+            <p>You have added these applications on CheckApp:</p>
+          {% endif %}
+        {% else %}
+          <h1>Applications</h1>
+          <p>This is a list of available applications. If you can't find some application, please add it.</p>
+        {% endif %}
+        <ul class="applist">
+          {% for app in apps.object_list %}
+            <li class="app">
+              <div class="item">
+                <a href="/app/{{app.short_name}}/"><img class="logo msize" src="{% if app.logo %}{{app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{app.name}} logo" title="{{app.name}} logo" /></a>
+                <div class="name">
+                  <a href="/app/{{app.short_name}}/">{{app.name}}</a>
+                </div>
+                <div class="info">
+                  <ul>
+                    <li>Platform: <em>{% if app.platform.all %}{{app.platform.all|join:", "}}{% else %}Unknown{% endif %}</em></li>
+                    <li>Category: <em><a href="/apps/?category={{app.category.name}}">{{app.category.name}}</a></em></li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+          {% empty %}
+            {% if user %}
+              <li>You haven't added any application.</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+        <div class="pagination">
+          <div class="step-links">
+            {% if apps.has_previous %}
+              <div class="prev">
+                <a href="?page={{apps.previous_page_number}}">&laquo; Previous</a>
+              </div>
+            {% endif %}
+            
+            {% if apps.has_next %}
+              <div class="next">
+                <a href="?page={{apps.next_page_number}}">Next &raquo;</a>
+              </div>
+            {% endif %}
+            
+            <div class="current">
+              Page {{apps.number}} of {{apps.paginator.num_pages}}
             </div>
-          </li>
-        {% endfor %}
-      </ul>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock content %}
 
@@ -52,39 +92,55 @@
   {% if not user %}
     <div id="column">
       <div class="holder">
-        <h2>Filter results</h2>
-        <form action="/apps/" method="get">
-          <ul>
-            <li>
-              <label for="name">Application Name:</label>
-              <input type="text" name="name" value="{{search.name}}" title="Type an application name"/>
-            </li>
-            <li>
-              <label for="developer">Developer:</label>
-              <input type="text" name="developer" value="{{search.developer}}" title="Type a developer"/>
-            </li>
-            <li>
-              <label for="license">License:</label>
-              <input type="text" name="license" value="{{search.license}}" title="Type a license"/>
-            </li>
-            <li>
-              <label for="category">Category:</label>
-              <select name="category">
-                <option value="">Undefined</option>
-                {% for cat in cats %}
-                  {% ifequal cat.name search.category %}
-                    <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
-                  {% else %}
-                    <option value="{{cat.name}}">{{cat.name}}</option>
-                  {% endifequal %}
-                {% endfor %}
-              </select>
-            </li>
-            <li>
-              <input type="submit" name="submit" value="Submit"/>
-            </li>
-          </ul>
-        </form>
+        <div class="form">
+          <h2>Filter results</h2>
+          <p>Type some information of the application you are looking for.</p>
+          <form action="/apps/" method="get">
+            <ul>
+              <li>
+                <label for="name">Name:</label>
+                <input type="text" name="name" value="{{search.name}}" title="Type an application name"/>
+              </li>
+              <li>
+                <label for="developer">Developer:</label>
+                <input type="text" name="developer" value="{{search.developer}}" title="Type a developer"/>
+              </li>
+              <li>
+                <label for="license">License:</label>
+                <input type="text" name="license" value="{{search.license}}" title="Type a license"/>
+              </li>
+              <li>
+                <label for="platform">Platform:</label>
+                <select name="platform">
+                  <option value="">Undefined</option>
+                  {% for plat in plats %}
+                    {% ifequal plat.name search.platform %}
+                      <option value="{{plat.name}}" selected="selected">{{plat.name}}</option>
+                    {% else %}
+                      <option value="{{plat.name}}">{{plat.name}}</option>
+                    {% endifequal %}
+                  {% endfor %}
+                </select>
+              </li>
+              <li>
+                <label for="category">Category:</label>
+                <select name="category">
+                  <option value="">Undefined</option>
+                  {% for cat in cats %}
+                    {% ifequal cat.name search.category %}
+                      <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+                    {% else %}
+                      <option value="{{cat.name}}">{{cat.name}}</option>
+                    {% endifequal %}
+                  {% endfor %}
+                </select>
+              </li>
+              <li class="buttons">
+                <input class="submit" type="submit" name="submit" value="Submit"/>
+              </li>
+            </ul>
+          </form>
+        </div>
       </div>
     </div>
   {% endif %}

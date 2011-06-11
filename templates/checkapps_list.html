@@ -4,13 +4,8 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        {% ifequal guest host %}
-          <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
-          <li><a href="/profiles/">People</a></li>
-        {% else %}
-          <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
-          <li><a href="/profiles/">People</a></li>
-        {% endifequal %}
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
         <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
@@ -18,51 +13,58 @@
 
 {% block breadcrumb %}
     <ul>
-      {% ifequal guest host %}
-        <li class="first current"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      {% else %}
-        <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      {% endifequal %}
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li class="first"><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
       <li>|</li>
       <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}
 
 {% block content %}
-    <div id="content">
-      <h1>My Check-apps</h1>
-      <div id="checkapps">
-        <ul class="checkapplist">
-          {% for checkapp in checkapps %}
-            {% if forloop.counter|divisibleby:"2" %}
-              <li class="checkapp_even">
-            {% else %}
-              <li class="checkapp_odd">
-            {% endif %}
-            {% if checkapp.app.logo %}
-              <div class="author"><img class="avatar" src="{{checkapp.app.logo.url}}" alt="" /><span class="wrote">Checked</span> <span class="name"><a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a>:</span></div>
-            {% else %}
-              <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" /><span class="wrote">Checked</span> <span class="name"><a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a>:</span></div>
-            {% endif %}
-            <div class="submitdate">{{checkapp.time|timesince}} ago</div>
+    <div id="checkapps">
+      <h1>Check-apps</h1>
+      {% if checkapps %}
+        <p>You have checked these applications:</p>
+      {% endif %}
+      <ul class="checkapplist">
+        {% for checkapp in checkapps.object_list %}
+          <li class="checkapp">
+          <div class="author">
+            <a href="/app/{{checkapp.app.short_name}}/"><img class="logo_l msize" src="{% if checkapp.app.logo %}{{checkapp.app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{checkapp.app.name}} logo" title="{{checkapp.app.name}} logo" /></a>
+            <span class="wrote">Checked</span> <span class="app"><a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a>:</span>
+          </div>
+          <div class="submitdate">{{checkapp.time|timesince}} ago</div>
+          <div class="text">
             {{checkapp.text|linebreaks}}
-            </li>
-          {% empty %}
-            <li>You haven't checked-app :-(</li>
-          {% endfor %}
-        </ul>
+          </div>
+          </li>
+        {% empty %}
+          <li>You haven't checked-app.<li>
+        {% endfor %}
+      </ul>
+      <div class="pagination">
+        <div class="step-links">
+          {% if checkapps.has_previous %}
+            <div class="prev">
+              <a href="?page={{checkapps.previous_page_number}}">&laquo; Previous</a>
+            </div>
+          {% endif %}
+          
+          {% if checkapps.has_next %}
+            <div class="next">
+              <a href="?page={{checkapps.next_page_number}}">Next &raquo;</a>
+            </div>
+          {% endif %}
+          
+          <div class="current">
+            Page {{checkapps.number}} of {{checkapps.paginator.num_pages}}
+          </div>
+        </div>
       </div>
     </div>
 {% endblock content %}
 
 {% block column %}
-    <div id="column">
-    </div>
 {% endblock %}
 

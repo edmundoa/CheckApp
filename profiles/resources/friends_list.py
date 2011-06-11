@@ -27,13 +27,18 @@ from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class FriendsList(WebResource):
     
+    NO_PER_PAGE = 10
+    
     def process_GET(self):
         guest = self.request.user
         
         if guest.is_authenticated():
             if guest.username == self.username:
-                friends = guest.friends.all().order_by('first_name', \
+                friend_list = guest.friends.all().order_by('first_name', \
                         'last_name', 'username')
+                friends = self.paginate_results(friend_list, \
+                        FriendsList.NO_PER_PAGE)
+                
                 return render_to_response('friends_list.html', \
                         {'guest': guest, 'friends': friends,}, \
                         context_instance=RequestContext(self.request))

@@ -28,15 +28,35 @@ from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class NotificationsList(WebResource):
     
+    MAX_NOTIFICATIONS = 15
+    
     def process_GET(self):
         guest = self.request.user
         
         if guest.is_authenticated():
             if guest.username == self.username:
                 notifications = guest.notification_set.order_by('-time').all()
+                new_nots = [i for i in notifications if i.read == False]
+                readed_nots = [i for i in notifications if i.read == True]
+                
+                no_new_nots = len(new_nots)
+                
+                if no_new_nots >= NotificationsList.MAX_NOTIFICATIONS:
+                    try:
+                        readed_nots = [readed_nots[0]]
+                    except:
+                        readed_nots = []
+                else:
+                    max_readed = NotificationsList.MAX_NOTIFICATIONS - \
+                            no_new_nots
+                    readed_nots = readed_nots[:max_readed]
+                
+                for i in new_nots:
+                    i.mark_read()
                 
                 return render_to_response('notifications.html', \
-                        {'guest': guest, 'notifications': notifications,}, \
+                        {'guest': guest, 'new_nots': new_nots, \
+                        'readed_nots': readed_nots,}, \
                         context_instance=RequestContext(self.request))
             else:
                 messages.error(self.request, UserMsgs.FORBIDDEN)

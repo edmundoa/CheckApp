@@ -33,7 +33,7 @@ class Login(WebResource):
         if user.is_authenticated():
             return HttpResponseRedirect('/profile/%s/' % user.username)
         else:
-            return render_to_response('login.html', \
+            return render_to_response('index.html', \
                     context_instance=RequestContext(self.request))
     
     def process_PUT(self):

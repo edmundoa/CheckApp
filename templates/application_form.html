@@ -5,23 +5,23 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/profile/{{guest.username}}">Me</a></li>
-        <li><a href="/profiles/">People</a></li>
-        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
 
 {% block breadcrumb %}
     <ul>
+      <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+      <li>|</li>
       {% if app %}
         <li class="first"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
         <li>|</li>
         <li class="current"><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
         <li>|</li>
-        <li><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+        <li><a href="/app/{{app.short_name}}/comments/">Comments</a></li>
       {% else %}
-        <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
-        <li>|</li>
         <li class="current"><a href="/apps/new/">New application</a></li>
       {% endif %}
       <li>|</li>
@@ -30,75 +30,130 @@
 {% endblock %}
 
 {% block content %}
-    {% if app %}
-      <form enctype="multipart/form-data" action="/app/{{app.short_name}}/edit/" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="_method" value="put"/>
-    {% else %}
-      <form enctype="multipart/form-data" action="/apps/create/" method="post">
-        {% csrf_token %}
-    {% endif %}
-      <ul>
-        <li>
-          <label for="logo">Logo:</label>
-          <input type="file" name="logo" title="{{app.name}}'s logo"/>
-        </li>
-        <li>
-          <label for="app_sname">Short Name:</label>
-          <input type="text" name="app_sname" maxlength="50"
-              value="{{app.short_name}}"
-              title="Type a short name for {{app.name}} to use on links"/>
-        </li>
-        <li>
-          <label for="app_name">Name:</label>
-          <input type="text" name="app_name" maxlength="50"
-              value="{{app.name}}"
-              title="Insert {{app.name}}'s name"/>
-        </li>
-        <li>
-          <label for="category">Category:</label>
-          <select name="category">
-            {% for cat in cats %}
-              {% ifequal cat app.category %}
-                <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
-              {% else %}
-                <option value="{{cat.name}}">{{cat.name}}</option>
-              {% endifequal %}
-            {% endfor %}
-          </select>
-        </li>
-        <li>
-          <label for="devel">Developer:</label>
-          <input type="text" name="devel" maxlength="200"
-              value="{{app.developer}}"
-              title="Type {{app.name}}'s developer"/>
-        </li>
-        <li>
-          <label for="version">Latest version:</label>
-          <input type="text" name="version" maxlength="30"
-              value="{{app.version}}"
-              title="Type {{app.name}}'s latest version"/>
-        </li>
-        <li>
-          <label for="license">License:</label>
-          <input type="text" name="license" maxlength="30"
-              value="{{app.license}}"
-              title="Type {{app.name}}'s license"/>
-        </li>
-        <li>
-          <label for="url">Website:</label>
-          <input type="text" name="url" maxlength="100"
-              value="{{app.url}}"
-              title="Type {{app.name}}'s website"/>
-        </li>
-        <li>
-          <label for="desc">Description:</label>
-          <textarea name="desc" rows="5" cols="50" title="Type a brief description of {{app.name}}">{{app.description}}</textarea>
-        </li>
+    <div id="content">
+      <div class="form">
+        {% if app %}
+          <form enctype="multipart/form-data" action="/app/{{app.short_name}}/edit/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="put"/>
+        {% else %}
+          <form enctype="multipart/form-data" action="/apps/create/" method="post">
+            {% csrf_token %}
+        {% endif %}
+          <ul>
+            <li>
+              <label for="logo">Logo:</label>
+              <input type="file" name="logo" title="{{app.name}}'s logo"/>
+            </li>
+            <li>
+              <label for="app_sname">Short Name:</label>
+              <input type="text" name="app_sname" maxlength="50"
+                  value="{% if form %}{{form.sname}}{% else %}{{app.short_name}}{% endif %}"
+                  title="Type a short name for {{app.name}} to use on links"/>
+            </li>
+            <li>
+              <label for="app_name">Name:</label>
+              <input type="text" name="app_name" maxlength="50"
+                  value="{% if form %}{{form.name}}{% else %}{{app.name}}{% endif %}"
+                  title="Insert {{app.name}}'s name"/>
+            </li>
+            <li>
+              <label for="category">Category:</label>
+              <select name="category">
+                {% for cat in cats %}
+                  {% ifequal cat.name form.cat %}
+                    <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+                  {% else %}
+                    {% ifequal cat app.category  %}
+                      <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+                    {% else %}
+                      <option value="{{cat.name}}">{{cat.name}}</option>
+                    {% endifequal %}
+                  {% endifequal %}
+                {% endfor %}
+              </select>
+            </li>
+            <li>
+              <label for="platform">Platform:</label>
+              <select name="platform">
+                {% for plat in plats %}
+                  {% ifequal plat.name form.plat %}
+                    <option value="{{plat.name}}" selected="selected">{{plat.name}}</option>
+                  {% else %}
+                    {% ifequal plat app.platform %}
+                      <option value="{{plat.name}}" selected="selected">{{plat.name}}</option>
+                    {% else %}
+                      <option value="{{plat.name}}">{{plat.name}}</option>
+                    {% endifequal %}
+                  {% endifequal %}
+                {% endfor %}
+              </select>
+            </li>
+            <li>
+              <label for="devel">Developer:</label>
+              <input type="text" name="devel" maxlength="200"
+                  value="{% if form %}{{form.devel|default:""}}{% else %}{{app.developer|default:""}}{% endif %}"
+                  title="Type {{app.name}}'s developer"/>
+            </li>
+            <li>
+              <label for="version">Latest version:</label>
+              <input type="text" name="version" maxlength="30"
+                  value="{% if form %}{{form.version|default:""}}{% else %}{{app.version|default:""}}{% endif %}"
+                  title="Type {{app.name}}'s latest version"/>
+            </li>
+            <li>
+              <label for="license">License:</label>
+              <input type="text" name="license" maxlength="30"
+                  value="{% if form %}{{form.license|default:""}}{% else %}{{app.license|default:""}}{% endif %}"
+                  title="Type {{app.name}}'s license"/>
+            </li>
+            <li>
+              <label for="url">Website:</label>
+              <input type="text" name="url" maxlength="100"
+                  value="{% if form %}{{form.url}}{% else %}{{app.url}}{% endif %}"
+                  title="Type {{app.name}}'s website"/>
+            </li>
+            <li>
+              <label for="wiki">Wiki:</label>
+              <input type="text" name="wiki" maxlength="100"
+                  value="{% if form %}{{form.wiki|default:""}}{% else %}{{app.wiki|default:""}}{% endif %}"
+                  title="Type {{app.name}}'s wiki"/>
+            </li>
+            <li>
+              <label for="blog">Blog:</label>
+              <input type="text" name="blog" maxlength="100"
+                  value="{% if form %}{{form.blog|default:""}}{% else %}{{app.blog|default:""}}{% endif %}"
+                  title="Type {{app.name}}'s blog"/>
+            </li>
+            <li>
+              <label for="desc">Description:</label>
+              <textarea id="description" name="desc" rows="5" cols="50" title="Type a brief description of {{app.name}}">{% if form %}{{form.desc}}{% else %}{{app.description}}{% endif %}</textarea>
+            </li>
+            <li class="buttons">
+              <input class="submit" type="submit" name="submit" value="Submit"/>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+{% endblock %}
 
-        <li>
-          <input type="submit" name="submit" value="Submit"/>
-        </li>
-      </ul>
-    </form>
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Tips:</h2>
+        {% if app %}
+          <p>Here are some tips that can help you editing an application:</p>
+        {% else %}
+          <p>Here are some tips that can help you adding an application:</p>
+        {% endif %}
+        <ul>
+          <li>Short name, name, category, platform, website and description are mandatory fields.</li>
+          <li>Application's short name will be used on URLs.</li>
+          <li>Short name has to be at least 3 characters long, and can only contain letters, numbers, dashes and dots.</li>
+          <li>Remember to add http:// or https:// to URLs.</li>
+          <li>You can write a description up to 300 characters.</li>
+        </ul>
+      </div>
+    </div>
 {% endblock %}

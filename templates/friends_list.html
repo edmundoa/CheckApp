@@ -4,8 +4,8 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
-        <li><a href="/profiles/">People</a></li>
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a class="active" href="/profile/{{guest.username}}/friends/">Friends</a></li>
         <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
@@ -13,13 +13,9 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      <li>|</li>
       <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
       <li>|</li>
       <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
-      <li>|</li>
-      <li class="current"><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
@@ -27,66 +23,86 @@
 
 {% block content %}
     <div id="content">
-      <ul>
-        {% for friend in friends %}
-          <li>
-            <div class="item">
-              <a href="/profile/{{friend.username}}/">
-              {% if friend.pic %}
-                <img class="imgl imgs" src="{{friend.pic.url}}" alt="{{friend.username}}'s picture" />
-              {% else %}
-                <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="{{friend.username}}'s picture" />
-              {% endif %}
-              </a>
-              {% if friend.first_name %}
-                <p><a href="/profile/{{friend.username}}/">
-                  {{friend.first_name|capfirst}}{% if friend.last_name %} {{friend.last_name|capfirst}}{% endif %}
-                </a></p>
-              {% else %}
-                <p><a href="/profile/{{friend.username}}/">
-                  {{friend.username}}
-                </a></p>
-              {% endif %}
-              </a>
-              <a href="/profile/{{guest.username}}/friends/{{friend.username}}/del/?_method=delete">Unfriend</a>
+      <div id="users">
+        <h1>Friends</h1>
+        <ul class="userlist">
+          {% for friend in friends.object_list %}
+            <li class="user">
+              <div class="item">
+                <a href="/profile/{{friend.username}}/"><img class="avatar msize" src="{% if friend.pic %}{{friend.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{friend.first_name}}'s picture" /></a>
+                  <a class="del_friend" href="/profile/{{guest.username}}/friends/{{friend.username}}/del/?_method=delete">Unfriend</a>
+                <div class="name">
+                <a href="/profile/{{friend.username}}/">{{friend.first_name|capfirst}} {{friend.last_name|capfirst}}</a>
+                </div>
+                <div class="info">
+                  {% with friend.last_checkapp as checkapp %}
+                    {% if checkapp %}
+                      Latest check-app: <em>{{checkapp.app.name}}</em>, {{checkapp.time|timesince}} ago.
+                    {% else %}
+                      Hasn't checked-app.
+                    {% endif %}
+                  {% endwith %}
+                </div>
+              </div>
+            </li>
+          {% empty %}
+            <li>You haven't got any friend, but don't feel lonely, you will find somebody interesting.</li>
+          {% endfor %}
+        </ul>
+        <div class="pagination">
+          <div class="step-links">
+            {% if friends.has_previous %}
+              <div class="prev">
+                <a href="?page={{friends.previous_page_number}}">&laquo; Previous</a>
+              </div>
+            {% endif %}
+            
+            {% if friends.has_next %}
+              <div class="next">
+                <a href="?page={{friends.next_page_number}}">Next &raquo;</a>
+              </div>
+            {% endif %}
+            
+            <div class="current">
+              Page {{friends.number}} of {{friends.paginator.num_pages}}
             </div>
-          </li>
-        {% empty %}
-          <li>You haven't got any friend, but don't feel lonely, you will find somebody interesting.</li>
-        {% endfor %}
-      </ul>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock content %}
 
 {% block column %}
     <div id="column">
       <div class="holder">
-        <h2>Add a new friend</h2>
-        <p>Do you want to add friends?</p>
-        <p>It's easy, just type some information and you will find them.</p>
-        <form action="/profiles/" method="get">
-          <ul>
-            <li>
-              <label for="username">Username:</label>
-              <input type="text" name="username" title="Type a username"/>
-            </li>
-            <li>
-              <label for="first_name">First name:</label>
-              <input type="text" name="first_name" title="Type a first name"/>
-            </li>
-            <li>
-              <label for="last_name">Last name:</label>
-              <input type="text" name="last_name" title="Type a last name"/>
-            </li>
-            <li>
-              <label for="email">E-Mail:</label>
-              <input type="text" name="email" title="Type an E-Mail"/>
-            </li>
-            <li>
-              <input type="submit" name="submit" value="Submit"/>
-            </li>
-          </ul>
-        </form>
+        <div class="form">
+          <h2>Add a new friend</h2>
+          <p>Do you want to add friends?</p>
+          <p>It's easy, just type some information and you will find them.</p>
+          <form action="/profiles/" method="get">
+            <ul>
+              <li>
+                <label for="username">Username:</label>
+                <input type="text" name="username" title="Type a username"/>
+              </li>
+              <li>
+                <label for="first_name">First name:</label>
+                <input type="text" name="first_name" title="Type a first name"/>
+              </li>
+              <li>
+                <label for="last_name">Last name:</label>
+                <input type="text" name="last_name" title="Type a last name"/>
+              </li>
+              <li>
+                <label for="email">E-Mail:</label>
+                <input type="text" name="email" title="Type an E-Mail"/>
+              </li>
+              <li class="buttons">
+                <input class="submit" type="submit" name="submit" value="Submit"/>
+              </li>
+            </ul>
+          </form>
+        </div>
       </div>
     </div>
 {% endblock %}

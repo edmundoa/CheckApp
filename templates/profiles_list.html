@@ -5,7 +5,7 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/profile/{{guest.username}}/">Me</a></li>
-        <li><a class="active" href="/profiles/">People</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
         <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
@@ -13,13 +13,9 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li class="first"><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
       <li>|</li>
       <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
@@ -27,57 +23,83 @@
 
 {% block content %}
     <div id="content">
-      <ul>
-        {% for user in users %}
-          <li>
-            <div class="item">
-              {% if user.pic %}
-                <img class="imgl imgs" src="{{user.pic.url}}" alt="{{user.first_name}}'s picture" />
-              {% else %}
-                <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="{{user.first_name}}'s picture" />
-              {% endif %}
-              {% if user in guest.friends.all %}
-                <p><a href="/profile/{{user.username}}/">{{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}</a></p>
-              {% else %}
-                <p>
-                  {{user.first_name|capfirst}}{% if user.last_name %} {{user.last_name|capfirst}}{% endif %}
-                  <a href="/profile/{{guest.username}}/friends/{{user.username}}/add/?_method=post">Add as a friend</a>
-                </p>
-              {% endif %}
+      <div id="users">
+        <h1>People</h1>
+        <ul class="userlist">
+          {% for user in users.object_list %}
+            <li class="user">
+              <div class="item">
+                <a href="/profile/{{user.username}}/"><img class="avatar msize" src="{% if user.pic %}{{user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{user.first_name}}'s picture" /></a>
+                <div class="name">
+                  <a href="/profile/{{user.username}}/">{{user.first_name|capfirst}} {{user.last_name|capfirst}}</a>
+                </div>
+                <div class="info">
+                  {% with user.last_checkapp as checkapp %}
+                    {% if checkapp %}
+                      Latest check-app: <em>{{checkapp.app.name}}</em>, {{checkapp.time|timesince}} ago.
+                    {% else %}
+                      Hasn't checked-app.
+                    {% endif %}
+                  {% endwith %}
+                </div>
+              </div>
+            </li>
+          {% empty %}
+            <li>Nobody matches your search criteria.</li>
+          {% endfor %}
+        </ul>
+        <div class="pagination">
+          <div class="step-links">
+            {% if users.has_previous %}
+              <div class="prev">
+                <a href="?page={{users.previous_page_number}}">&laquo; Previous</a>
+              </div>
+            {% endif %}
+            
+            {% if users.has_next %}
+              <div class="next">
+                <a href="?page={{users.next_page_number}}">Next &raquo;</a>
+              </div>
+            {% endif %}
+            
+            <div class="current">
+              Page {{users.number}} of {{users.paginator.num_pages}}
             </div>
-          </li>
-        {% endfor %}
-      </ul>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock content %}
 
 {% block column %}
     <div id="column">
       <div class="holder">
-        <h2>Filter results</h2>
-        <form action="/profiles/" method="get">
-          <ul>
-            <li>
-              <label for="username">Username:</label>
-              <input type="text" name="username" value="{{search.username}}" title="Type a username"/>
-            </li>
-            <li>
-              <label for="first_name">First name:</label>
-              <input type="text" name="first_name" value="{{search.first_name}}" title="Type a first name"/>
-            </li>
-            <li>
-              <label for="last_name">Last name:</label>
-              <input type="text" name="last_name" value="{{search.last_name}}" title="Type a last name"/>
-            </li>
-            <li>
-              <label for="email">E-Mail:</label>
-              <input type="text" name="email" value="{{search.email}}" title="Type an E-Mail"/>
-            </li>
-            <li>
-              <input type="submit" name="submit" value="Submit"/>
-            </li>
-          </ul>
-        </form>
+        <div class="form">
+          <h2>Filter results</h2>
+          <form action="/profiles/" method="get">
+            <ul>
+              <li>
+                <label for="username">Username:</label>
+                <input type="text" name="username" value="{{search.username}}" title="Type a username"/>
+              </li>
+              <li>
+                <label for="first_name">First name:</label>
+                <input type="text" name="first_name" value="{{search.first_name}}" title="Type a first name"/>
+              </li>
+              <li>
+                <label for="last_name">Last name:</label>
+                <input type="text" name="last_name" value="{{search.last_name}}" title="Type a last name"/>
+              </li>
+              <li>
+                <label for="email">E-Mail:</label>
+                <input type="text" name="email" value="{{search.email}}" title="Type an E-Mail"/>
+              </li>
+              <li class="buttons">
+                <input class="submit" type="submit" name="submit" value="Submit"/>
+              </li>
+            </ul>
+          </form>
+        </div>
       </div>
     </div>
 {% endblock %}

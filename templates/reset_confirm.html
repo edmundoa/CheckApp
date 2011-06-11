@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <div class="homecontent">
+        {% if validlink %}
+          <h1>Reset your password</h1>
+          <p>Please enter your new password twice so we can verify you typed it in correctly.</p>
+          <div class="form">
+            <form action="" method="post">
+              {% csrf_token %}
+              <ul>
+                <li>
+                  <label for="id_new_password1">New password:</label>
+                  <input id="id_new_password1" name="new_password1" type="password" title="Insert your new password"/>
+                </li>
+                <li>
+                  <label for="id_new_password2">Confirm password:</label>
+                  <input id="id_new_password2" name="new_password2" type="password" title="Confirm your new password"/>
+                </li>
+                <li class="buttons">
+                  <input class="submit" type="submit" name="submit" value="Change your password"/>
+                </li>
+              </ul>
+            </form>
+          </div>
+        {% else %}
+          <h1>Password reset unsuccessful</h1>
+          <p>The password reset link was invalid, possibly because it has already been used. Please request a new password reset.</p>
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}

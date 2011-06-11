@@ -24,10 +24,10 @@ class UserMsgs:
     APP_EDITED = "Application has been edited. Thanks for keep us updated."
     COMMENT_ADDED = "Thanks for your comment!"
     USER_CREATED = "Thank you for joining! Your profile has been created."
-    USER_EDITED = "Don't you feel something has changed? Your profile " + \
-            "has been edited."
+    USER_EDITED = "Don't you feel like something has changed? Your " + \
+            "profile has been edited."
     FRIEND_ADDED = "Whoa! You have a new friend ;-)"
-    FRIEND_REMOVED = "You have lost a friend :-("
+    FRIEND_REMOVED = "Friend removed"
     CHECKAPP_DONE = "Great! Thanks for checking app!"
     MERIT_ACHIEVED = "Congratulations! You have achieved a new merit."
     

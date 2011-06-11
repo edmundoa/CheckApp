@@ -5,15 +5,17 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/profile/{{guest.username}}/">Me</a></li>
-        <li><a href="/profiles/">People</a></li>
-        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
 
 {% block breadcrumb %}
     <ul>
-      <li class="first"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
+      <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+      <li>|</li>
+      <li><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
       {% ifequal app.owner guest %}
         <li>|</li>
         <li><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
@@ -21,56 +23,72 @@
       <li>|</li>
       <li class="current"><a href="/app/{{app.short_name}}/comments/">Comments</a></li>
       <li>|</li>
-      <li><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
-      <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}
 
 {% block content %}
-    <div id="content">
-      <h1>Comments on {{app.name}}</h1>
-      <div id="comments">
-        <ul class="commentlist">
-          {% for comment in comments %}
-            {% if forloop.counter|divisibleby:"2" %}
-              <li class="comment_even">
-            {% else %}
-              <li class="comment_odd">
-            {% endif %}
-            {% if comment.user.pic %}
-              <div class="author"><img class="avatar" src="{{comment.user.pic.url}}" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
-            {% else %}
-              <div class="author"><img class="avatar" src="/files/images/demo/imgl.gif" alt="" />{% ifequal comment.user guest %}<a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>{% endifequal %}<span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span></div>
-            {% endif %}
-              <div class="submitdate">{{comment.time}}</div>
-              {{comment.text|linebreaks}}
-            </li>
-          {% empty %}
-            <li>Nobody has written any comment :-(</li>
-          {% endfor %}
-        </ul>
+    <h1>Comments on {{app.name}}</h1>
+    {% if comments %}
+      <p>Users have written these comments about {{app.name}}.</p>
+    {% endif %}
+    <div id="comments">
+      <ul class="commentlist">
+        {% for comment in comments.object_list %}
+          {% if forloop.counter|divisibleby:"2" %}
+            <li class="comment_even">
+          {% else %}
+            <li class="comment_odd">
+          {% endif %}
+          <div class="author">
+            <a href="/profile/{{comment.user.username}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{comment.user.first_name}}'s avatar" title="{{comment.user.first_name}}'s avatar" /></a>
+            {% ifequal comment.user guest %}
+              <a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>
+            {% endifequal %}
+            <span class="name"><a href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/">#{{comment.order}}</a></span> <span class="wrote">by</span> <span class="name"><a href="/profile/{{comment.user.username}}/">{{comment.user.first_name}}</a>:</span>
+          </div>
+          <div class="submitdate">{{comment.time}}</div>
+          {{comment.text|linebreaks}}
+          </li>
+        {% empty %}
+          <li>Nobody has written any comment :-(</li>
+        {% endfor %}
+      </ul>
+      <div class="pagination">
+        <div class="step-links">
+          {% if comments.has_previous %}
+            <div class="prev">
+              <a href="?page={{comments.previous_page_number}}">&laquo; Previous</a>
+            </div>
+          {% endif %}
+          
+          {% if comments.has_next %}
+            <div class="next">
+              <a href="?page={{comments.next_page_number}}">Next &raquo;</a>
+            </div>
+          {% endif %}
+          
+          <div class="current">
+            Page {{comments.number}} of {{comments.paginator.num_pages}}
+          </div>
+        </div>
       </div>
+    </div>
+    <h2>Add a new comment</h2>
+    <div class="form">
+      <form action="/app/{{app.short_name}}/comments/create/" method="post">
+        {% csrf_token %}
+        <p>
+          <textarea name="text" id="comment" cols="100%" rows="10">{{text}}</textarea>
+          <label for="text" style="display:none;"><small>Comment (required)</small></label>
+        </p>
+        <p>
+          <input name="submit" type="submit" class="submit" value="Comment" />
+        </p>
+      </form>
     </div>
 {% endblock content %}
 
 {% block column %}
-    <div id="column">
-      <div class="holder">
-        <h2>Add a new comment</h2>
-        <div id="respond">
-          <form action="/app/{{app.short_name}}/comments/create/" method="post">
-            {% csrf_token %}
-            <p>
-              <textarea name="text" id="comment" cols="100%" rows="10"></textarea>
-              <label for="text" style="display:none;"><small>Comment (required)</small></label>
-            </p>
-            <p>
-              <input name="submit" type="submit" id="submit" value="Comment" />
-            </p>
-          </form>
-        </div>
-      </div>
-    </div>
 {% endblock %}
 

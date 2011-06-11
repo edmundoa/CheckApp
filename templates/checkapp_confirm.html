@@ -5,23 +5,23 @@
       <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/profile/{{guest.username}}/">Me</a></li>
-        <li><a href="/profiles/">People</a></li>
-        <li class="last"><a class="active" href="/apps/">Apps</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
 {% endblock %}
 
 {% block breadcrumb %}
     <ul>
-      <li class="first current"><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
+      <li class="first"><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
+      <li>|</li>
+      <li><a href="/app/{{app.short_name}}/">{{app.name}}</a></li>
       {% ifequal app.owner guest %}
         <li>|</li>
         <li><a href="/app/{{app.short_name}}/form/">Edit application</a></li>
       {% endifequal %}
       <li>|</li>
       <li><a href="/app/{{app.short_name}}/comments/">Comments</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/apps/">Your applications</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
@@ -31,12 +31,12 @@
     <div id="content">
       <h1>Checking-app</h1>
       <p>You are going to check-app <a href="/app/{{app.short_name}}/">{{app.name}}</a>. Write a comment if you want to and click check-app.</p>
-      <div id="respond">
+      <div class="form">
         <form action="/profile/{{guest.username}}/checkapp/{{app.short_name}}/create/" method="post">
           {% csrf_token %}
           <input type="hidden" name="_method" value="put"/>
-          <p><textarea id="message" name="comment" rows="3"></textarea></p>
-          <p><input id="submit" type="submit" name="submit" value="Check-app"/></p>
+          <p><textarea id="message" name="comment" rows="3">{{text|default:""}}</textarea></p>
+          <p><input class="submit" type="submit" name="submit" value="Check-app"/></p>
         </form>
       </div>
     </div>
@@ -45,11 +45,17 @@
 {% block column %}
     <div id="column">
       <div class="holder">
-        <h2>Your check-apps</h2>
-        <ul>
-          <li>You have made {{ca_no}} check-apps so far today.</li>
-          <li><a href="/app/{{last_ca.app.short_name}}/">{{last_ca.app.name}}</a> was your latest check-app.</li>
-        </ul>
+        <div id="info">
+          <h2>Your check-apps</h2>
+          <ul class="messages">
+            <li>You have checked {{ca_no}} apps so far today.</li>
+            {% if last_ca %}
+              <li><a href="/app/{{last_ca.app.short_name}}/">{{last_ca.app.name}}</a> was your latest check-app.</li>
+            {% else %}
+              <li>You haven't checked-app any application.</li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
     </div>
 {% endblock %}

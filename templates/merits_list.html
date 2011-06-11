@@ -4,13 +4,8 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        {% ifequal guest host %}
-          <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
-          <li><a href="/profiles/">People</a></li>
-        {% else %}
-          <li><a href="/profile/{{guest.username}}/">Me</a></li>
-          <li><a class="active" href="/profiles/">People</a></li>
-        {% endifequal %}
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
         <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
@@ -18,13 +13,9 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li class="first"><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
       <li>|</li>
       <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
@@ -32,46 +23,55 @@
 
 {% block content %}
     <div id="content">
-      {% ifequal guest host %}
-        <h1>Your merits</h1>
-        <ul>
-          {% for pin in pins %}
-            <li>
-              <div class="item">
-                <p>
-                {% if pin in host.pins.all %}
-                  <img class="imgl imgs" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
-                {% else %}
-                  <img class="imgl imgs" src="/files/images/demo/imgl.gif" alt="Achieve {{pin.name}} to view it!" title="Achieve {{pin.name}} to view it!" />
-                {% endif %}
-                  {{pin.name}}
-                </p>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <h1>{{host.first_name}}'s merits</h1>
-        <ul>
-          {% for pin in host.pins.all %}
-            <li>
-              <div class="item">
-                <img class="imgl imgs" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
+      <div id="merits">
+        {% ifequal guest host %}
+          <h1>Merits</h1>
+          <ul>
+            {% for pin in pins %}
+              <li class="pin">
+                <div>
+                  {% if pin in host.pins.all %}
+                    <img class="msize" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
+                  {% else %}
+                    <img class="msize" src="/files/images/demo/imgl.gif" alt="Achieve {{pin.name}} to see it!" title="Achieve {{pin.name}} to see it!" />
+                  {% endif %}
+                </div>
                 {{pin.name}}
-              </div>
-            </li>
-          {% empty %}
-            <li>
-              {{host.first_name}} has not achieved any merit.
-            </li>
-          {% endfor %}
-        </ul>
-      {% endifequal %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <h1>{{host.first_name}}'s merits</h1>
+          <ul>
+            {% for pin in host.pins.all %}
+              <li class="pin">
+                <div>
+                  <img class="msize" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
+                </div>
+                {{pin.name}}
+              </li>
+            {% empty %}
+              <li>
+                {{host.first_name}} has not achieved any merit.
+              </li>
+            {% endfor %}
+          </ul>
+        {% endifequal %}
+      </div>
     </div>
 {% endblock content %}
 
 {% block column %}
     <div id="column">
+      <div class="holder">
+        <h2>What are merits?</h2>
+        <p>
+          While you use CheckApp, you will achieve merits. Everytime you achieve a new merit, we will give you a pin as a price, and this is your personal hall of fame inside CheckApp.
+        </p>
+        <p>
+          Of course, this is just a little game. Don't take it too seriously ;-)
+        </p>
+      </div>
     </div>
 {% endblock %}
 

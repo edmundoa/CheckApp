@@ -35,9 +35,17 @@
     <div id="messages">
       <ul>
         {% for message in messages %}
-          <li>{{message}}</li>
+          <li {% if message.tags %} class="{{message.tags}}"{% endif %}>{{message}}</li>
         {% endfor %}
       </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% if form.email.errors %}
+  <div class="wrapper col3">
+    <div id="errors">
+      {{form.email.errors}}
     </div>
   </div>
 {% endif %}

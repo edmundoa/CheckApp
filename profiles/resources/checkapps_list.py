@@ -28,12 +28,16 @@ from checkapp.profiles.helpers.user_msgs import UserMsgs
 
 class CheckAppsList(WebResource):
     
+    NO_PER_PAGE = 10
+    
     def process_GET(self):
         guest = self.request.user
         
         if guest.is_authenticated():
             if guest.username == self.username:
-                checkapps = guest.checkapp_set.all().order_by('-time')
+                checkapp_list = guest.checkapp_set.all().order_by('-time')
+                checkapps = self.paginate_results(checkapp_list, \
+                        CheckAppsList.NO_PER_PAGE)
                 
                 return render_to_response('checkapps_list.html', \
                         {'guest': guest, 'checkapps': checkapps,}, \

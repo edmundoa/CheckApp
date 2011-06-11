@@ -36,20 +36,46 @@ legend{display:none;}
 
 /* ----------------------------------------------Forms in Content Area-------------------------------------*/
 
-#container #respond{display: block; width:100%;}
+#container .form{display: block; width:100%;}
 
-#container #respond input{width:170px; padding:2px; border:1px solid #CCCCCC; margin:5px 5px 0 0;}
+#container .form input{width:170px; padding:2px; border:1px solid #CCCCCC; margin:5px 5px 0 0;}
 
-#container #respond textarea{width:98%; border:1px solid #CCCCCC; padding:2px; overflow:auto;}
+#container .form textarea{width:98%; border:1px solid #CCCCCC; padding:2px; overflow:auto;}
 	
-#container #respond p{margin:5px 0;}
+#container .form p{0 0 20px 0;}
 
-#container #respond #submit, #container #respond #reset{
+#container .form ul{list-style:none; padding-left:5px;}
+
+#container .form li{margin-bottom:10px;}
+
+#container .form li label{float:left; margin:10px 0 5px 0; width:35%;}
+
+#container .form li input{width:55%;}
+
+#container .form select{
 	margin:0;
-	padding:5px;
+    padding:3px;
+    color:#666666;
+    background-color:#F7F7F7;
+    border:1px solid #CCCCCC;
+	}
+
+#container .form li.buttons{margin:20px 0 0 35%;}
+
+#container .form textarea{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	}
+
+#container .form #description{font-family:verdana, Arial, Helvetica, sans-serif;width:55%;}
+
+#container .form .submit, #container .form .reset{
+	margin:0;
+	padding:5px 10px 5px 10px;
 	color:#666666;
 	background-color:#F7F7F7;
 	border:1px solid #CCCCCC;
+	width:auto;
 	}
 
 /* ----------------------------------------------Contact Form in Footer-------------------------------------*/

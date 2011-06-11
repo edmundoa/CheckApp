@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <div class="homecontent">
+        <h1>Password reset complete</h1>
+        <p>Your password has been set. You may go ahead and <a href="/login/">log-in now.</a></p>
+      </div>
+    </div>
+{% endblock %}

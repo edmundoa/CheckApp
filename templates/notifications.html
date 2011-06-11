@@ -4,8 +4,8 @@
     <div id="topnav">
       <ul>
         <li><a href="/">Home</a></li>
-        <li><a class="active" href="/profile/{{guest.username}}/">Me</a></li>
-        <li><a href="/profiles/">People</a></li>
+        <li><a href="/profile/{{guest.username}}/">Me</a></li>
+        <li><a href="/profile/{{guest.username}}/friends/">Friends</a></li>
         <li class="last"><a href="/apps/">Apps</a></li>
       </ul>
     </div>
@@ -13,38 +13,43 @@
 
 {% block breadcrumb %}
     <ul>
-      <li class="first"><a href="/profile/{{guest.username}}/">{{guest.first_name}}</a></li>
-      <li>|</li>
-      <li class="current"><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
+      <li class="first current"><a href="/profile/{{guest.username}}/notifications/">Notifications ({{guest.count_unread}})</a></li>
       <li>|</li>
       <li><a href="/profile/{{guest.username}}/form/">Edit my profile</a></li>
-      <li>|</li>
-      <li><a href="/profile/{{guest.username}}/friends/">Manage friends</a></li>
       <li>|</li>
       <li><a href="/logout/">Logout</a></li>
     </ul>
 {% endblock %}
 
 {% block content %}
-      <ul>
-        {% for notification in notifications %}
-          <li>
-            {% if notification.readed %}
-              <div class="notification">
+    <div id="notifications">
+      <h1>Notifications</h1>
+      {% if new_nots or readed_nots %}
+        <p>Take a look to these notifications to know what's going on.</p>
+      {% endif %}
+      <ul class="notificationlist">
+        {% for notification in new_nots %}
+          <li class="notification new">
+            <div class="submitdate">{{notification.time}}</div>
+            {% if notification.url %}
+              <a href="{{notification.url}}">{{notification.text}}</a>
             {% else %}
-              <div class="notification unreaded">
+              {{notification.text}}
             {% endif %}
-              <div class="submitdate">{{notification.time}}</div>
-              {% if notification.url %}
-                <a href="{{notification.url}}">{{notification.text}}</a>
-              {% else %}
-                {{notification.text}}
-              {% endif %}
-            </div>
           </li>
-          {{notification.mark_read|default:""}}
+        {% endfor %}
+        {% for notification in readed_nots %}
+          <li class="notification">
+            <div class="submitdate">{{notification.time}}</div>
+            {% if notification.url %}
+              <a href="{{notification.url}}">{{notification.text}}</a>
+            {% else %}
+              {{notification.text}}
+            {% endif %}
+          </li>
         {% endfor %}
       </ul>
+    </div>
 {% endblock content %}
 
 {% block column %}
