@@ -171,6 +171,19 @@ div.wrapper{
 	font-family:Georgia, "Times New Roman", Times, serif;
 	}
 
+#head #login{
+	color:#E8E8E8;
+	display:block;
+	position:absolute;
+	top:10px;
+	right:0;
+	}
+
+#head #login a{
+	color:#E8E8E8;
+	font-weight:bold;
+	}
+
 /* ----------------------------------------------Breadcrumb Navigation-------------------------------------*/
 
 #breadcrumb{
@@ -647,8 +660,8 @@ div.wrapper{
 	}
 
 #users .userlist li.user .del_friend:hover{
-	background-color:#FF5246;
-	color:white;
+	background-color:#888888;
+	color:#E6E6E6;
 	}
 
 /* ------Apps lists-----*/
@@ -783,6 +796,40 @@ div.wrapper{
 	}
 
 
+/* -------Contact-------*/
+
+#contact ul{
+	list-style:none;
+	} 
+
+#contact ul li{
+	height:100px;
+	margin-bottom:30px;
+	}
+
+#contact ul.sublist{
+	list-style:disc;
+	margin-left:100px;
+	padding-top:20px;
+	}
+
+#contact ul.sublist li{
+	height:auto;
+	margin-bottom:10px;
+	}
+
+#contact #email{
+	background:url("/files/images/email_75.png") no-repeat scroll 0 50% transparent;
+	}
+
+#contact #websites{
+	background:url("/files/images/web_75.png") no-repeat scroll 0 50% transparent;
+	}
+
+#contact #social_nets{
+	background:url("/files/images/twitter_75.png") no-repeat scroll 0 50% transparent;
+	}
+
 /* ----------------------------------------------Right Block-------------------------------------*/
 
 #column{
@@ -871,8 +918,8 @@ div.wrapper{
 	}
 
 #column #button .del_friend:hover{
-	background-color:#FF5246;
-	color:white;
+	background-color:#888888;
+	color:#E6E6E6;
 	}
 
 /* ----------------------------------------------Footer-------------------------------------*/
@@ -898,17 +945,11 @@ div.wrapper{
 	border-bottom:1px dashed #CCCCCC;
 	}
 
-#contactform{
-	display:block;
-	float:left;
-	width:350px;
-	}
-
 /* ------Company Details------*/
 
 #compdetails{
 	display:block;
-	float:right;
+	float:left;
 	width:550px;
 	}
 
@@ -919,22 +960,12 @@ div.wrapper{
 	}
 
 #compdetails li{
-	margin:0 0 12px 0;
+  float:left;
+	margin:0 12px 0 0;
 	}
 
 #compdetails li.last{
 	margin:0;
-	}
-
-#officialdetails{
-	float:left;
-	}
-#officialdetails li.last{
-	margin-bottom:20px;
-	}
-
-#contactdetails{
-	float:right;
 	}
 
 /* ------Copyright------*/
@@ -943,8 +974,8 @@ div.wrapper{
 	display:block;
 	float:left;
 	width:100%;
-	margin:25px 0 0 0;
-	padding:20px 0 0 0;
+	margin:15px 0 0 0;
+	padding:15px 0 0 0;
 	font-size:12px;
 	border-top:1px dashed #666666;
 	}

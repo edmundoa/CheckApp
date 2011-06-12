@@ -31,7 +31,7 @@
         {% for checkapp in checkapps.object_list %}
           <li class="checkapp">
           <div class="author">
-            <a href="/app/{{checkapp.app.short_name}}/"><img class="logo_l msize" src="{% if checkapp.app.logo %}{{checkapp.app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{checkapp.app.name}} logo" title="{{checkapp.app.name}} logo" /></a>
+            <a href="/app/{{checkapp.app.short_name}}/"><img class="logo_l msize" src="{% if checkapp.app.logo %}{{checkapp.app.logo.url}}{% else %}/files/images/unknown_app_75.png{% endif %}" alt="{{checkapp.app.name}} logo" title="{{checkapp.app.name}} logo" /></a>
             <span class="wrote">Checked</span> <span class="app"><a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a>:</span>
           </div>
           <div class="submitdate">{{checkapp.time|timesince}} ago</div>

@@ -19,27 +19,10 @@
 
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-from django.template import RequestContext
-from django.contrib import messages
 from checkapp.profiles.resources.web_resource import WebResource
-from checkapp.profiles.models import Profile, Pin
-from checkapp.profiles.helpers.data_checker import DataChecker, DataError
-from checkapp.profiles.helpers.user_msgs import UserMsgs
 
-class MeritsList(WebResource):
+class Contact(WebResource):
     
     def process_GET(self):
-        guest = self.request.user
-        
-        if guest.is_authenticated():
-            host = Profile.objects.get(username = self.username)
-            pins = Pin.objects.order_by('category', 'grade').all()
-            
-            return render_to_response('merits_list.html', \
-                    {'guest': guest, 'host': host, 'pins': pins,}, \
-                    context_instance=RequestContext(self.request))
-        else:
-            messages.error(self.request, UserMsgs.LOGIN)
-            return HttpResponseRedirect('/login/')
-
+        return render_to_response('contact.html',)
 

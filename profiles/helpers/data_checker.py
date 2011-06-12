@@ -98,7 +98,7 @@ class DataChecker:
         if len(sname) < 3:
             raise DataError('Short name must have at least 3 characters')
         
-        if not DataChecker.TEXT_RE.match(email):
+        if not DataChecker.TEXT_RE.match(sname):
             raise DataError("Invalid short name format")
     
     @staticmethod

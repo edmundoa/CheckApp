@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block menu %}
+    <div id="topnav">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li class="last"><a href="/apps/">Apps</a></li>
+      </ul>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+      <div id="contact">
+        <h1>Contact</h1>
+        <p>There are several ways to contact us:</p>
+        <ul>
+          <li id="email">
+            <ul class="sublist">
+              <li>checkapp-answers[at]lists.sourceforge.net (Subscribe to this mailing list <a href="https://lists.sourceforge.net/lists/listinfo/checkapp-answers">here</a>)</li>
+            </ul>
+          </li>
+          <li id="websites">
+            <ul class="sublist">
+              <li><a href="https://launchpad.net/checkapp">CheckApp Launchpad profile</a> (code hosting, downloads, bugs, answers and translations)</li>
+              <li><a href="http://detrasproject.wordpress.com/">DeTraS and CheckApp blog</a></li>
+            </ul>
+          </li>
+          <li id="social_nets">
+            <ul class="sublist">
+              <li><a href="https://twitter.com/Ch3ckApp">CheckApp on Twitter</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+{% endblock %}
+
+{% block column %}
+    <div id="column">
+      <div class="holder">
+        <h2>Tips</h2>
+        <ul>
+          <li>If you have found a bug or a problem, please report it <a href="https://bugs.launchpad.net/checkapp">here</a>.</li>
+          <li>Subscribe to our announcements mailing list clicking <a href="https://lists.sourceforge.net/lists/listinfo/checkapp-announcements">here</a>.</li>
+        </ul>
+      </div>
+    </div>
+{% endblock %}

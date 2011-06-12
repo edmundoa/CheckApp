@@ -41,7 +41,7 @@
             <li class="comment_odd">
           {% endif %}
           <div class="author">
-            <a href="/profile/{{comment.user.username}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{comment.user.first_name}}'s avatar" title="{{comment.user.first_name}}'s avatar" /></a>
+            <a href="/profile/{{comment.user.username}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/unknown_user_50.png{% endif %}" alt="{{comment.user.first_name}}'s avatar" title="{{comment.user.first_name}}'s avatar" /></a>
             {% ifequal comment.user guest %}
               <a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>
             {% endifequal %}

@@ -43,91 +43,99 @@
           <ul>
             <li>
               <label for="logo">Logo:</label>
-              <input type="file" name="logo" title="{{app.name}}'s logo"/>
+              <input id="logo" type="file" name="logo" title="{{app.name}}'s logo"/>
             </li>
             <li>
               <label for="app_sname">Short Name:</label>
-              <input type="text" name="app_sname" maxlength="50"
+              <input id="app_sname" type="text" name="app_sname" maxlength="50"
                   value="{% if form %}{{form.sname}}{% else %}{{app.short_name}}{% endif %}"
                   title="Type a short name for {{app.name}} to use on links"/>
             </li>
             <li>
               <label for="app_name">Name:</label>
-              <input type="text" name="app_name" maxlength="50"
+              <input id="app_name" type="text" name="app_name" maxlength="50"
                   value="{% if form %}{{form.name}}{% else %}{{app.name}}{% endif %}"
                   title="Insert {{app.name}}'s name"/>
             </li>
             <li>
               <label for="category">Category:</label>
-              <select name="category">
+              <select id="category" name="category">
                 {% for cat in cats %}
-                  {% ifequal cat.name form.cat %}
-                    <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
-                  {% else %}
-                    {% ifequal cat app.category  %}
+                  {% if form %}
+                    {% ifequal cat.name form.cat %}
                       <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
                     {% else %}
                       <option value="{{cat.name}}">{{cat.name}}</option>
                     {% endifequal %}
-                  {% endifequal %}
+                  {% else %}
+                    {% ifequal cat app.category %}
+                      <option value="{{cat.name}}" selected="selected">{{cat.name}}</option>
+                    {% else %}
+                      <option value="{{cat.name}}">{{cat.name}}</option>
+                    {% endifequal %}
+                  {% endif %}
                 {% endfor %}
               </select>
             </li>
             <li>
-              <label for="platform">Platform:</label>
-              <select name="platform">
+              <label>Platforms:</label>
+              <fieldset>
                 {% for plat in plats %}
-                  {% ifequal plat.name form.plat %}
-                    <option value="{{plat.name}}" selected="selected">{{plat.name}}</option>
-                  {% else %}
-                    {% ifequal plat app.platform %}
-                      <option value="{{plat.name}}" selected="selected">{{plat.name}}</option>
+                  {% if form %}
+                    {% if plat.name in form.plats %}
+                      <input type="checkbox" class="checkbox" name="platform" value="{{plat.name}}" checked="checked" />{{plat.name}}</br>
                     {% else %}
-                      <option value="{{plat.name}}">{{plat.name}}</option>
-                    {% endifequal %}
-                  {% endifequal %}
+                      <input type="checkbox" class="checkbox" name="platform" value="{{plat.name}}" />{{plat.name}}</br>
+                    {% endif %}
+                  {% else %}
+                    {% if plat in app.platform.all %}
+                      <input type="checkbox" class="checkbox" name="platform" value="{{plat.name}}" checked="checked" />{{plat.name}}</br>
+                    {% else %}
+                      <input type="checkbox" class="checkbox" name="platform" value="{{plat.name}}" />{{plat.name}}</br>
+                    {% endif %}
+                  {% endif %}
                 {% endfor %}
-              </select>
+              </fieldset>
             </li>
             <li>
               <label for="devel">Developer:</label>
-              <input type="text" name="devel" maxlength="200"
+              <input id="devel" type="text" name="devel" maxlength="200"
                   value="{% if form %}{{form.devel|default:""}}{% else %}{{app.developer|default:""}}{% endif %}"
                   title="Type {{app.name}}'s developer"/>
             </li>
             <li>
               <label for="version">Latest version:</label>
-              <input type="text" name="version" maxlength="30"
+              <input id="version" type="text" name="version" maxlength="30"
                   value="{% if form %}{{form.version|default:""}}{% else %}{{app.version|default:""}}{% endif %}"
                   title="Type {{app.name}}'s latest version"/>
             </li>
             <li>
               <label for="license">License:</label>
-              <input type="text" name="license" maxlength="30"
+              <input id="license" type="text" name="license" maxlength="30"
                   value="{% if form %}{{form.license|default:""}}{% else %}{{app.license|default:""}}{% endif %}"
                   title="Type {{app.name}}'s license"/>
             </li>
             <li>
               <label for="url">Website:</label>
-              <input type="text" name="url" maxlength="100"
+              <input id="url" type="text" name="url" maxlength="100"
                   value="{% if form %}{{form.url}}{% else %}{{app.url}}{% endif %}"
                   title="Type {{app.name}}'s website"/>
             </li>
             <li>
               <label for="wiki">Wiki:</label>
-              <input type="text" name="wiki" maxlength="100"
+              <input id="wiki" type="text" name="wiki" maxlength="100"
                   value="{% if form %}{{form.wiki|default:""}}{% else %}{{app.wiki|default:""}}{% endif %}"
                   title="Type {{app.name}}'s wiki"/>
             </li>
             <li>
               <label for="blog">Blog:</label>
-              <input type="text" name="blog" maxlength="100"
+              <input id="blog" type="text" name="blog" maxlength="100"
                   value="{% if form %}{{form.blog|default:""}}{% else %}{{app.blog|default:""}}{% endif %}"
                   title="Type {{app.name}}'s blog"/>
             </li>
             <li>
-              <label for="desc">Description:</label>
-              <textarea id="description" name="desc" rows="5" cols="50" title="Type a brief description of {{app.name}}">{% if form %}{{form.desc}}{% else %}{{app.description}}{% endif %}</textarea>
+              <label for="description">Description:</label>
+              <textarea id="description" name="description" rows="5" cols="50" title="Type a brief description of {{app.name}}">{% if form %}{{form.desc}}{% else %}{{app.description}}{% endif %}</textarea>
             </li>
             <li class="buttons">
               <input class="submit" type="submit" name="submit" value="Submit"/>

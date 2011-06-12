@@ -29,9 +29,9 @@
     <div id="content">
       <div id="card">
         {% ifequal guest host %}
-          <img class="imgr lsize" src="{% if host.pic %}{{host.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="Your picture" title="Your picture" />
+          <img class="imgr lsize" src="{% if host.pic %}{{host.pic.url}}{% else %}/files/images/unknown_user_150.png{% endif %}" alt="Your picture" title="Your picture" />
         {% else %}
-          <img class="imgr lsize" src="{% if host.pic %}{{host.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{host.first_name}}'s picture" title="{{host.first_name}}'s picture" />
+          <img class="imgr lsize" src="{% if host.pic %}{{host.pic.url}}{% else %}/files/images/unknown_user_150.png{% endif %}" alt="{{host.first_name}}'s picture" title="{{host.first_name}}'s picture" />
         {% endifequal %}
         <h1>{{host.first_name|capfirst}} {{host.last_name|capfirst}}</h1>
         <ul>
@@ -76,7 +76,7 @@
               <li class="comment_odd">
             {% endif %}
             <div class="author">
-              <a href="/app/{{comment.app.short_name}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{comment.user.first_name}}'s picture" title="{{comment.user.first_name}}'s picture" /></a>
+              <a href="/app/{{comment.app.short_name}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/unknown_user_50.png{% endif %}" alt="{{comment.user.first_name}}'s picture" title="{{comment.user.first_name}}'s picture" /></a>
               {% ifequal comment.user guest %}
                 <a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>
               {% endifequal %}
@@ -121,7 +121,7 @@
               <li class="checkapp">
                 <div class="app">
                   <a href="/app/{{checkapp.app.short_name}}/">
-                    <img class="logo ssize" src="{% if checkapp.app.logo %}{{checkapp.app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{checkapp.app.name}} logo" title="{{checkapp.app.name}} logo" />
+                    <img class="logo ssize" src="{% if checkapp.app.logo %}{{checkapp.app.logo.url}}{% else %}/files/images/unknown_app_50.png{% endif %}" alt="{{checkapp.app.name}} logo" title="{{checkapp.app.name}} logo" />
                   </a>
                   <a href="/app/{{checkapp.app.short_name}}/">{{checkapp.app.name}}</a>
                 </div>
@@ -151,7 +151,7 @@
           <ul class="userlist">
             {% for friend in friends.all %}
               <li class="user">
-                <a href="/profile/{{friend.username}}/"><img class="avatar xssize" src="{% if friend.pic %}{{friend.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{friend.first_name}}'s picture" /></a>
+                <a href="/profile/{{friend.username}}/"><img class="avatar xssize" src="{% if friend.pic %}{{friend.pic.url}}{% else %}/files/images/unknown_user_30.png{% endif %}" alt="{{friend.first_name}}'s picture" /></a>
                 <div class="name">
                   <a href="/profile/{{friend.username}}/">{{friend.first_name|capfirst}}</a>
                 </div>

@@ -36,24 +36,28 @@
       <div id="apps">
         {% if user %}
             <h1>Your applications</h1>
-          {% if apps %}
+          {% if apps.object_list %}
             <p>You have added these applications on CheckApp:</p>
           {% endif %}
         {% else %}
           <h1>Applications</h1>
-          <p>This is a list of available applications. If you can't find some application, please add it.</p>
+          {% if apps.object_list %}
+            <p>This is a list of available applications. If you can't find some application, please add it.</p>
+          {% endif %}
         {% endif %}
         <ul class="applist">
           {% for app in apps.object_list %}
             <li class="app">
               <div class="item">
-                <a href="/app/{{app.short_name}}/"><img class="logo msize" src="{% if app.logo %}{{app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{app.name}} logo" title="{{app.name}} logo" /></a>
+                <a href="/app/{{app.short_name}}/"><img class="logo msize" src="{% if app.logo %}{{app.logo.url}}{% else %}/files/images/unknown_app_75.png{% endif %}" alt="{{app.name}} logo" title="{{app.name}} logo" /></a>
                 <div class="name">
                   <a href="/app/{{app.short_name}}/">{{app.name}}</a>
                 </div>
                 <div class="info">
                   <ul>
-                    <li>Platform: <em>{% if app.platform.all %}{{app.platform.all|join:", "}}{% else %}Unknown{% endif %}</em></li>
+                    <li>Platform:
+                      <em>{% for plat in app.platform.all %}<a href="/apps/?platform={{plat.name}}">{{plat.name}}</a>{% if not forloop.last %}, {% endif %}{% empty %}Unknown{% endfor %}</em>
+                    </li>
                     <li>Category: <em><a href="/apps/?category={{app.category.name}}">{{app.category.name}}</a></em></li>
                   </ul>
                 </div>
@@ -62,6 +66,8 @@
           {% empty %}
             {% if user %}
               <li>You haven't added any application.</li>
+            {% else %}
+              <li>No application matches your search criteria. If you can't find an application, please add it.</li>
             {% endif %}
           {% endfor %}
         </ul>

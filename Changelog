@@ -1,3 +1,68 @@
+2011-06-12  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * templates/files/images/demo/:
+    * templates/files/images/demo/240x90.gif:
+    * templates/files/images/demo/286x100.gif:
+    * templates/files/images/demo/290x100.gif:
+    * templates/files/images/demo/290x105.gif:
+    * templates/files/images/demo/64x64.gif:
+    * templates/files/images/demo/avatar.gif:
+    * templates/files/images/demo/gallery_1.gif:
+    * templates/files/images/demo/gallery_2.gif:
+    * templates/files/images/demo/gallery_3.gif:
+    * templates/files/images/demo/gallery_default.gif:
+    * templates/files/images/demo/imgl.gif:
+    * templates/files/images/demo/imgr.gif:
+    * templates/files/images/demo/index.html:
+    * templates/files/images/index.html:
+        There are new graphics, so templates' demo files are not needed and \
+        they have been removed.
+
+    * profiles/resources/about.py:
+    * profiles/resources/contact.py:
+    * templates/about.html:
+    * templates/contact.html:
+    * templates/files/images/email_75.png:
+    * templates/files/images/twitter_75.png:
+    * templates/files/images/unknown_app_150.png:
+    * templates/files/images/unknown_app_50.png:
+    * templates/files/images/unknown_app_75.png:
+    * templates/files/images/unknown_merit_75.png:
+    * templates/files/images/unknown_user_150.png:
+    * templates/files/images/unknown_user_30.png:
+    * templates/files/images/unknown_user_50.png:
+    * templates/files/images/unknown_user_75.png:
+    * templates/files/images/web_75.png:
+    * README:
+    * profiles/helpers/data_checker.py:
+    * profiles/resources/app.py:
+    * profiles/resources/apps_list.py:
+    * profiles/resources/merits_list.py:
+    * templates/app_comments_list.html:
+    * templates/application.html:
+    * templates/application_form.html:
+    * templates/apps_list.html:
+    * templates/base.html:
+    * templates/checkapps_list.html:
+    * templates/comment.html:
+    * templates/files/styles/forms.css:
+    * templates/files/styles/layout.css:
+    * templates/friends_list.html:
+    * templates/index.html:
+    * templates/merits_list.html:
+    * templates/profile.html:
+    * templates/profile_comments_list.html:
+    * templates/profiles_list.html:
+    * urls.py:
+        Changes done:
+            - New graphics.
+            - Some graphical improvements.
+            - Applications can be related to several platforms.
+            - Improvements in forms.
+            - Added about and contact pages.
+        Some minor bug-fixes and improvements.
+
+
 2011-06-11  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * templates/index.html:

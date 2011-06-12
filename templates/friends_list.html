@@ -29,8 +29,8 @@
           {% for friend in friends.object_list %}
             <li class="user">
               <div class="item">
-                <a href="/profile/{{friend.username}}/"><img class="avatar msize" src="{% if friend.pic %}{{friend.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{friend.first_name}}'s picture" /></a>
-                  <a class="del_friend" href="/profile/{{guest.username}}/friends/{{friend.username}}/del/?_method=delete">Unfriend</a>
+                <a href="/profile/{{friend.username}}/"><img class="avatar msize" src="{% if friend.pic %}{{friend.pic.url}}{% else %}/files/images/unknown_user_75.png{% endif %}" alt="{{friend.first_name}}'s picture" /></a>
+                  <a class="del_friend" href="/profile/{{guest.username}}/friends/{{friend.username}}/del/?_method=delete" onclick="return confirm('Do you really want to remove {{friend.username}} from your friend list?');">Unfriend</a>
                 <div class="name">
                 <a href="/profile/{{friend.username}}/">{{friend.first_name|capfirst}} {{friend.last_name|capfirst}}</a>
                 </div>

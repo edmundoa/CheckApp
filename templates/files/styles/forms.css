@@ -52,6 +52,8 @@ legend{display:none;}
 
 #container .form li input{width:55%;}
 
+#container .form li input.checkbox{width:30px;}
+
 #container .form select{
 	margin:0;
     padding:3px;

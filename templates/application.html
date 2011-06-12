@@ -40,7 +40,7 @@
 {% block content %}
     <div id="content">
       <div id="card">
-        <img class="imgr lsize" src="{% if app.logo %}{{app.logo.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{app.name}}'s logo" title="{{app.name}}'s logo" />
+        <img class="imgr lsize" src="{% if app.logo %}{{app.logo.url}}{% else %}/files/images/unknown_app_150.png{% endif %}" alt="{{app.name}}'s logo" title="{{app.name}}'s logo" />
         <h1>{{app.name|capfirst}} <em>in <a href="/apps/?category={{app.category.name}}">{{app.category.name|capfirst}}</a></em></h1>
         <ul>
           {% if guest.is_authenticated %}
@@ -64,7 +64,7 @@
                 <li class="comment_odd">
               {% endif %}
               <div class="author">
-                <a href="/profile/{{comment.user.username}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{comment.user.first_name}}'s picture" title="{{comment.user.first_name}}'s picture" /></a>
+                <a href="/profile/{{comment.user.username}}/"><img class="avatar ssize" src="{% if comment.user.pic %}{{comment.user.pic.url}}{% else %}/files/images/unknown_user_50.png{% endif %}" alt="{{comment.user.first_name}}'s picture" title="{{comment.user.first_name}}'s picture" /></a>
                 {% ifequal comment.user guest %}
                   <a class="edit" href="/app/{{comment.app.short_name}}/comment/{{comment.order}}/form/">Edit</a>
                 {% endifequal %}
@@ -107,7 +107,16 @@
           {% if app.developer %}
             <li><div class="title">Developer:</div> <div class="data">{{app.developer}}</div></li>
           {% endif %}
-          <li><div class="title">Platforms:</div> <div class="data">{% if app.platform.all %}{{app.platform.all|join:", "}}{% else %}Unknown{% endif %}</div></li>
+          <li>
+            <div class="title">Platforms:</div>
+            <div class="data">
+              {% for plat in app.platform.all %}
+                <a href="/apps/?platform={{plat.name}}">{{plat.name}}</a>{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                Unknown
+              {% endfor %}
+            </div>
+          </li>
           {% if app.version %}
             <li><div class="title">Latest version:</div> <div class="data">{{app.version}}</div></li>
           {% endif %}

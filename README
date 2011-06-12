@@ -1,5 +1,5 @@
-CheckApp (https://launchpad.net/detras)
-=======================================
+CheckApp 0.1 (https://launchpad.net/detras)
+===========================================
 
 CheckApp is a social web application that allows people to check up the
 applications they are using, comment them and share them with their friends.
@@ -10,4 +10,11 @@ code, or deploy this application in their own server.
 
 CheckApp is built on Python, Django and MySQL, and being released under
 the GPL license.
+
+
+Graphic resources:
+------------------
+- Icons for unknown user, unknown merit, unknow application and those used
+  in contact page are part of Faenza icon set by Tiheum:
+         http://tiheum.deviantart.com/art/Faenza-Icons-173323228
 

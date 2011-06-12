@@ -108,23 +108,27 @@ class AppsList(WebResource):
         form['name'] = self.request.POST.get('app_name', None)
         logo = self.request.FILES.get('logo', None)
         form['cat'] = self.request.POST.get('category', None)
-        form['plat'] = self.request.POST.get('platform', None)
+        form['plats'] = self.request.POST.getlist('platform')
         form['devel'] = self.request.POST.get('devel', None)
         form['version'] = self.request.POST.get('version', None)
         form['license'] = self.request.POST.get('license', None)
         form['url'] = self.request.POST.get('url', None)
         form['wiki'] = self.request.POST.get('wiki', None)
         form['blog'] = self.request.POST.get('blog', None)
-        form['desc'] = self.request.POST.get('desc', None)
+        form['desc'] = self.request.POST.get('description', None)
         
         try:
             DataChecker.check_short_name(form['sname'])
             DataChecker.check_name(form['name'])
             DataChecker.check_category(form['cat'])
-            DataChecker.check_platform(form['plat'])
+            
+            if not form['plats']:
+                raise DataError("You have to pick a platform")
+            for i in form['plats']:
+                DataChecker.check_platform(i)
             
             if not DataChecker.defined(form['url']):
-                    raise DataError("Website cannot be empty")
+                raise DataError("Website cannot be empty")
             
             DataChecker.check_url(form['url'])
             DataChecker.check_url(form['wiki'])
@@ -148,9 +152,9 @@ class AppsList(WebResource):
             
             app.save()
             
-            platform = Platform.objects.get(name=form['plat'])
-            app.platform.clear()
-            app.platform.add(platform)
+            for i in form['plats']:
+                platform = Platform.objects.get(name=i)
+                app.platform.add(platform)
             
             if logo is not None:
                 print "logo is not None"

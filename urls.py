@@ -17,6 +17,8 @@ from checkapp.profiles.resources.comments_list import CommentsList
 from checkapp.profiles.resources.checkapp_ import CheckApp_
 from checkapp.profiles.resources.checkapps_list import CheckAppsList
 from checkapp.profiles.resources.merits_list import MeritsList
+from checkapp.profiles.resources.about import About
+from checkapp.profiles.resources.contact import Contact
 
 
 # Uncomment the next two lines to enable the admin:
@@ -34,6 +36,10 @@ urlpatterns = patterns('',
     (r'^admin/',    include(admin.site.urls)),
     
     (r'^$', 'django.views.generic.simple.redirect_to',  {'url': '/login/',}),
+    
+    # CheckApp information
+    (r'^about/$',   About(),),
+    (r'^contact/$', Contact(),),
     
     # Session management
     (r'^login/$',   Login(),),

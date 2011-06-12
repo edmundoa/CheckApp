@@ -33,7 +33,7 @@
                   {% if pin in host.pins.all %}
                     <img class="msize" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
                   {% else %}
-                    <img class="msize" src="/files/images/demo/imgl.gif" alt="Achieve {{pin.name}} to see it!" title="Achieve {{pin.name}} to see it!" />
+                    <img class="msize" src="/files/images/unknown_merit_75.png" alt="Achieve {{pin.name}} to see it!" title="Achieve {{pin.name}} to see it!" />
                   {% endif %}
                 </div>
                 {{pin.name}}
@@ -43,13 +43,15 @@
         {% else %}
           <h1>{{host.first_name}}'s merits</h1>
           <ul>
-            {% for pin in host.pins.all %}
-              <li class="pin">
-                <div>
-                  <img class="msize" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
-                </div>
-                {{pin.name}}
-              </li>
+            {% for pin in pins %}
+              {% if pin in host.pins.all %}
+                <li class="pin">
+                  <div>
+                    <img class="msize" src="{{pin.image.url}}" alt="{{pin.text}}" title="{{pin.text}}" />
+                  </div>
+                  {{pin.name}}
+                </li>
+              {% endif %}
             {% empty %}
               <li>
                 {{host.first_name}} has not achieved any merit.

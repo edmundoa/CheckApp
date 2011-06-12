@@ -29,7 +29,7 @@
           {% for user in users.object_list %}
             <li class="user">
               <div class="item">
-                <a href="/profile/{{user.username}}/"><img class="avatar msize" src="{% if user.pic %}{{user.pic.url}}{% else %}/files/images/demo/imgl.gif{% endif %}" alt="{{user.first_name}}'s picture" /></a>
+                <a href="/profile/{{user.username}}/"><img class="avatar msize" src="{% if user.pic %}{{user.pic.url}}{% else %}/files/images/unknown_user_75.png{% endif %}" alt="{{user.first_name}}'s picture" /></a>
                 <div class="name">
                   <a href="/profile/{{user.username}}/">{{user.first_name|capfirst}} {{user.last_name|capfirst}}</a>
                 </div>
