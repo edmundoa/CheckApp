@@ -92,7 +92,7 @@ class UserProfile(WebResource):
                     
                     messages.success(self.request, UserMsgs.USER_EDITED)
                     return HttpResponseRedirect('/profile/%s/' % self.username)
-                except DataError as error:
+                except DataError, error:
                     messages.error(self.request, error.msg)
                     
                     return render_to_response('profile_edit_form.html', \

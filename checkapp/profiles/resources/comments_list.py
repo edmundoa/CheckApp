@@ -85,7 +85,7 @@ class CommentsList(WebResource):
                 
                 return HttpResponseRedirect('/app/%s/comments/' % \
                         app.short_name)
-            except DataError as error:
+            except DataError, error:
                 messages.error(self.request, error.msg)
                 
                 comments = app.comment_set.all().order_by('-time')

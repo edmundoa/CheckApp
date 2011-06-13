@@ -25,6 +25,9 @@ from checkapp.profiles.resources.contact import Contact
 from django.contrib import admin
 admin.autodiscover()
 
+handler404 = 'checkapp.profiles.views.view_404'
+handler500 = 'checkapp.profiles.views.view_500'
+
 urlpatterns = patterns('',
     # Example:
     # (r'^checkapp/', include('checkapp.foo.urls')),

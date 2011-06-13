@@ -60,7 +60,7 @@ class Comment_(WebResource):
                 
                 return HttpResponseRedirect('/app/%s/comment/%s/' % \
                         (app.short_name, comment.order))
-            except DataError as error:
+            except DataError, error:
                 messages.error(self.request, error.msg)
                 
                 return render_to_response('comment.html', \

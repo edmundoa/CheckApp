@@ -88,7 +88,7 @@ class CheckApp_(WebResource):
                         messages.info(self.request, UserMsgs.MERIT_ACHIEVED)
                     
                     return HttpResponseRedirect('/app/%s/' % app.short_name)
-                except DataError as error:
+                except DataError, error:
                     messages.error(self.request, error.msg)
                     
                     try:

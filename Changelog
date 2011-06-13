@@ -1,3 +1,39 @@
+2011-06-13  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * __init__.py => checkapp/__init__.py:
+    * auth_backend.py => checkapp/auth_backend.py:
+    * manage.py => checkapp/manage.py:
+    * media/ => checkapp/media/:
+    * profiles/ => checkapp/profiles/:
+    * settings.py => checkapp/settings.py:
+    * templates/ => checkapp/templates/:
+    * urls.py => checkapp/urls.py:
+        Moving some files to make CheckApp runable on its default folder.
+
+    * DEPENDENCIES:
+    * INSTALL:
+    * checkapp/:
+    * checkapp/templates/custom_404.html:
+    * checkapp/templates/custom_500.html:
+    * .bzrignore:
+    * README:
+    * checkapp/profiles/admin.py:
+    * checkapp/profiles/resources/app.py:
+    * checkapp/profiles/resources/apps_list.py:
+    * checkapp/profiles/resources/checkapp_.py:
+    * checkapp/profiles/resources/comment.py:
+    * checkapp/profiles/resources/comments_list.py:
+    * checkapp/profiles/resources/user_profile.py:
+    * checkapp/profiles/resources/user_profiles_list.py:
+    * checkapp/profiles/views.py:
+    * checkapp/urls.py:
+        - Added some documentation to install and configure CheckApp.
+        - Created templates for 404 and 500 errors.
+        - You can modify platforms from the admin interface.
+        - Added Python 2.5 compatibility.
+        - Fixed a bug on user creation. Thanks for reporting it, Rob!
+
+
 2011-06-12  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * templates/files/images/demo/:

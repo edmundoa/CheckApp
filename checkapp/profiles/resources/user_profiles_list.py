@@ -101,12 +101,12 @@ class UserProfilesList(WebResource):
             user.save()
             
             # User is logged in without typing again its data
-            user = authenticate(username=uname, password=password)
+            user = authenticate(username=form['uname'], password=password)
             login(self.request, user)
             
             messages.success(self.request, UserMsgs.USER_CREATED)
             return HttpResponseRedirect('/profile/%s/' % user.username)
-        except DataError as error:
+        except DataError, error:
             messages.error(self.request, error.msg)
             
             return render_to_response('profile_creation_form.html', \

@@ -1,0 +1,17 @@
+CheckApp v0.1.1 dependencies
+============================
+
+In order to run CheckApp, you need the following software:
+
+    - Django 1.2
+    - Python >=2.5 <3.0
+    - South 0.7.x
+    - python-imaging
+    - MySQL >=5
+
+If you want to deploy CheckApp on a production server, you will also need:
+
+    - Apache
+    - mod_wsgi for Apache
+    - A mail server (to recover passwords). I like Postfix, but it's up to
+      you.

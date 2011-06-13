@@ -164,7 +164,7 @@ class AppsList(WebResource):
             
             messages.success(self.request, UserMsgs.APP_ADDED)
             return HttpResponseRedirect('/app/%s/' % app.short_name)
-        except DataError as error:
+        except DataError, error:
             messages.error(self.request, error.msg)
             
             categories = Category.objects.all().order_by('name')

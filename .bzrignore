@@ -1,12 +1,9 @@
 *~
 *.tmp
 *.py[co]
-./templates/full-width.html
-./templates/images
-./templates/style-demo.html
-./templates/styles
-./media/app_logos/*
-./media/app_screenshots/*
-./media/pins/*
-./media/user_pics/*
+./checkapp/media/app_logos/*
+./checkapp/media/app_screenshots/*
+./checkapp/media/pins/*
+./checkapp/media/user_pics/*
+./checkapp/profiles/migrations
 
