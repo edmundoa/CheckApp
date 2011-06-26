@@ -61,39 +61,39 @@ urlpatterns = patterns('',
     (r'^apps/$',    AppsList(),),
     (r'^apps/create/$', AppsList(),),
     (r'^apps/new/$',    AppForm(),),
-    (r'^app/(?P<appname>[\w-]+)/$', App(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/$',\
+    (r'^app/(?P<appname>[\w\d\-\.]+)/$', App(),),
+    (r'^app/(?P<appname>[\w\d\-\.]+)/comment/(?P<commentno>[\d-]+)/$',\
             Comment_(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/edit/$',\
+    (r'^app/(?P<appname>[\w\d\-\.]+)/comment/(?P<commentno>[\d-]+)/edit/$',\
             Comment_(),),
-    (r'^app/(?P<appname>[\w-]+)/comment/(?P<commentno>[\d-]+)/form/$',\
+    (r'^app/(?P<appname>[\w\d\-\.]+)/comment/(?P<commentno>[\d-]+)/form/$',\
             CommentForm(),),
-    (r'^app/(?P<appname>[\w-]+)/comments/$',    CommentsList(),),
-    (r'^app/(?P<appname>[\w-]+)/comments/create/$', CommentsList(),),
-    (r'^app/(?P<appname>[\w-]+)/edit/$',    App(),),
-    (r'^app/(?P<appname>[\w-]+)/form/$',    AppForm(),),
+    (r'^app/(?P<appname>[\w\d\-\.]+)/comments/$',    CommentsList(),),
+    (r'^app/(?P<appname>[\w\d\-\.]+)/comments/create/$', CommentsList(),),
+    (r'^app/(?P<appname>[\w\d\-\.]+)/edit/$',    App(),),
+    (r'^app/(?P<appname>[\w\d\-\.]+)/form/$',    AppForm(),),
     
     # User profiles
     (r'^profiles/$',    UserProfilesList(),),
     (r'^profiles/create/$', UserProfilesList(),),
     (r'^profiles/new/$',    UserProfileForm(),),
-    (r'^profile/(?P<username>[\w-]+)/$',    UserProfile(),),
-    (r'^profile/(?P<username>[\w-]+)/apps/$',   AppsList(),),
-    (r'^profile/(?P<username>[\w-]+)/checkapp/(?P<appname>[\w-]+)/$',\
+    (r'^profile/(?P<username>[\w\d\-\.]+)/$',    UserProfile(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/apps/$',   AppsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/checkapp/(?P<appname>[\w-]+)/$',\
             CheckApp_(),),
-    (r'^profile/(?P<username>[\w-]+)/checkapp/(?P<appname>[\w-]+)/create/$',\
+    (r'^profile/(?P<username>[\w\d\-\.]+)/checkapp/(?P<appname>[\w-]+)/create/$',\
             CheckApp_(),),
-    (r'^profile/(?P<username>[\w-]+)/checkapps/$',  CheckAppsList(),),
-    (r'^profile/(?P<username>[\w-]+)/comments/$',   CommentsList(),),
-    (r'^profile/(?P<username>[\w-]+)/edit/$',   UserProfile(),),
-    (r'^profile/(?P<username>[\w-]+)/form/$',   UserProfileForm(),),
-    (r'^profile/(?P<username>[\w-]+)/friends/$',    FriendsList(),),
-    (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/add/$',  \
+    (r'^profile/(?P<username>[\w\d\-\.]+)/checkapps/$',  CheckAppsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/comments/$',   CommentsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/edit/$',   UserProfile(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/form/$',   UserProfileForm(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/friends/$',    FriendsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/friends/(?P<friend>[\w-]+)/add/$',  \
             FriendsList(),),
-    (r'^profile/(?P<username>[\w-]+)/friends/(?P<friend>[\w-]+)/del/$',  \
+    (r'^profile/(?P<username>[\w\d\-\.]+)/friends/(?P<friend>[\w-]+)/del/$',  \
             FriendsList(),),
-    (r'^profile/(?P<username>[\w-]+)/merits/$',   MeritsList(),),
-    (r'^profile/(?P<username>[\w-]+)/notifications/$',  NotificationsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/merits/$',   MeritsList(),),
+    (r'^profile/(?P<username>[\w\d\-\.]+)/notifications/$',  NotificationsList(),),
 )
 
 if settings.DEBUG:

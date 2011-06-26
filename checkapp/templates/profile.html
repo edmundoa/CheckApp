@@ -128,7 +128,9 @@
                 <div class="time">
                   {{checkapp.time|timesince}} ago.
                 </div>
-                <p>{{checkapp.text}}</p>
+                {% if checkapp.text %}
+                  <p>{{checkapp.text}}</p>
+                {% endif %}
               </li>
             {% empty %}
               {% ifequal guest host %}

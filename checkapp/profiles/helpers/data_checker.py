@@ -36,9 +36,9 @@ class DataError(Exception):
 
 class DataChecker:
     
-    TEXT_RE = re.compile('[\w\d\-\.]+')
-    EMAIL_RE = re.compile('[\w\-\.]+@[\w\-]+\.[\w\.]{2,}')
-    URL_RE = re.compile('http(s)?:\/\/(\.)*')
+    TEXT_RE = re.compile(r'^[\w\d\-\.]+$')
+    EMAIL_RE = re.compile(r'^[\w\-\.]+@[\w\-]+\.[\w\.]{2,}$')
+    URL_RE = re.compile(r'^http(s)?:\/\/(\.)*$')
     
     @staticmethod
     def defined(string):

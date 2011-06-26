@@ -1,3 +1,13 @@
+2011-06-26  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * DEPENDENCIES:
+    * INSTALL:
+    * README:
+    * checkapp/profiles/helpers/data_checker.py:
+    * checkapp/templates/profile.html:
+    * checkapp/urls.py:
+        Bug-fixes checking and using usernames and application's short names.
+
 2011-06-13  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * __init__.py => checkapp/__init__.py:
