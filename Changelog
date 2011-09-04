@@ -1,3 +1,11 @@
+2011-09-05  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
+
+    * checkapp/profiles/helpers/data_checker.py:
+    * checkapp/templates/files/styles/navi.css:
+        Fixed an error on URL checking and performed a small graphic
+        improvement.
+
+
 2011-06-26  Edmundo Álvarez Jiménez <e.alvarezj@gmail.com>
 
     * DEPENDENCIES:

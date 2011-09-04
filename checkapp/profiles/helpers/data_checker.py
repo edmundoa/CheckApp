@@ -38,7 +38,7 @@ class DataChecker:
     
     TEXT_RE = re.compile(r'^[\w\d\-\.]+$')
     EMAIL_RE = re.compile(r'^[\w\-\.]+@[\w\-]+\.[\w\.]{2,}$')
-    URL_RE = re.compile(r'^http(s)?:\/\/(\.)*$')
+    URL_RE = re.compile(r'^http(s)?:\/\/[\w\d](.)*$')
     
     @staticmethod
     def defined(string):
