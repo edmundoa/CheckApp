@@ -8,6 +8,7 @@ In order to run CheckApp, you need the following software:
     - South 0.7.x
     - python-imaging
     - MySQL >=5
+    - MySQL module for Python
 
 If you want to deploy CheckApp on a production server, you will also need:
 

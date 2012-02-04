@@ -18,28 +18,31 @@ To install CheckApp on a development server, you have to follow these steps:
        called "checkapp" and a user with permissions to handle that
        schema.
     
-    5. Decompress CheckApp tarball on your system. Go to that folder using
+    5. Install MySQL module for Python. In a Debian based distribution, you can
+       do it by installing python-mysqldb package.
+    
+    6. Decompress CheckApp tarball on your system. Go to that folder using
        a terminal and enter to "checkapp" folder.
         
-        5.1. Edit "settings.py", changing your database data, E-Mail settings,
+        6.1. Edit "settings.py", changing your database data, E-Mail settings,
              DEBUG flag, TIME_ZONE, MEDIA_ROOT, SECRET_KEY and TEMPLATE_DIRS
              to fit your installation. Here is a guide to generate a new
              SECRET_KEY:
                 http://mylesbraithwaite.com/journal/2007/10/secret-key/
         
-        5.2. Execute "python manage.py syncdb" on your terminal to generate
+        6.2. Execute "python manage.py syncdb" on your terminal to generate
              database tables. It will ask you to create an admin for the admin
              interface. I recommend you doing that.
         
-        5.3. If you want to change your server domain name, you can access
+        6.3. If you want to change your server domain name, you can access
              to your database, and modify data on 'django_site' table.
         
-        5.4. Now it's time to run your development server. Just execute
+        6.4. Now it's time to run your development server. Just execute
              "python manage.py runserver 8080", and you should access to
              your own CheckApp going to:
                 http://localhost:8080
         
-        5.5. Before starting using CheckApp, you need to add some Platforms,
+        6.5. Before starting using CheckApp, you need to add some Platforms,
              Categories and Pins objects manually. Use the admin interface
              or Django's shell to add them.
 
