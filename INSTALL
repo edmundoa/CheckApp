@@ -18,34 +18,34 @@ To install CheckApp on a development server, you have to follow these steps:
        called "checkapp" and a user with permissions to handle that
        schema.
     
-    5. Install MySQL module for Python. In a Debian based distribution, you can
-       do it by installing python-mysqldb package.
+    5. Install MySQL module for Python. In a Debian based distribution, you
+       can do it by installing python-mysqldb package.
     
     6. Decompress CheckApp tarball on your system. Go to that folder using
        a terminal and enter to "checkapp" folder.
         
-        6.1. Edit "settings.py", changing your database data, E-Mail settings,
-             DEBUG flag, TIME_ZONE, MEDIA_ROOT, SECRET_KEY and TEMPLATE_DIRS
-             to fit your installation. Here is a guide to generate a new
-             SECRET_KEY:
-                http://mylesbraithwaite.com/journal/2007/10/secret-key/
+    7. Edit "settings.py", changing your database data, E-Mail settings,
+       DEBUG flag, TIME_ZONE, MEDIA_ROOT, SECRET_KEY and TEMPLATE_DIRS
+       to fit your installation. Here is a guide to generate a new
+       SECRET_KEY:
+            http://mylesbraithwaite.com/journal/2007/10/secret-key/
         
-        6.2. Execute "python manage.py syncdb" on your terminal to generate
-             database tables. It will ask you to create an admin for the admin
-             interface. I recommend you doing that.
+    8. Execute "python manage.py syncdb" on your terminal to generate
+       database tables. It will ask you to create an admin for the admin
+       interface. I recommend you doing that.
         
-        6.3. If you want to change your server domain name, you can access
-             to your database, and modify data on 'django_site' table.
+    9. If you want to change your server domain name, you can access
+       to your database, and modify data on 'django_site' table.
         
-        6.4. Now it's time to run your development server. Just execute
-             "python manage.py runserver 8080", and you should access to
-             your own CheckApp going to:
-                http://localhost:8080
+   10. Now it's time to run your development server. Just execute
+       "python manage.py runserver 8080", and you should access to
+       your own CheckApp going to:
+            http://localhost:8080
         
-        6.5. Before starting using CheckApp, you need to add some Platforms,
-             Categories and Pins objects manually. Use the admin interface
-             or Django's shell to add them.
+   11. Before start using CheckApp, you need to add some Platforms,
+       Categories and Pins objects manually. Use the admin interface
+       or Django's shell to add them.
 
-Remember that using Django's server is not intended for a production server,
-so don't use the previous steps to run CheckApp on a production server!
+Please note that using Django's server is not intended for a production server,
+so you should use another web server to host the application!
 
